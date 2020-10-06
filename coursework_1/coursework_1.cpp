@@ -1,11 +1,130 @@
 ﻿#include <iostream>
-#include "practical_work_1.h"
+#include <locale.h>
+#include <windows.h>
 
-using namespace std;
+#include "BinaryRepresentation.h"
+
+//using
+using std::cout;
+using std::cin;
+using std::endl;
+
+enum ConsoleColor {
+    Black = 0,
+    Blue = 1,
+    Green = 2,
+    Cyan = 3,
+    Red = 4,
+    Magenta = 5,
+    Brown = 6,
+    LightGray = 7,
+    DarkGray = 8,
+    LightBlue = 9,
+    LightGreen = 10,
+    LightCyan = 11,
+    LightRed = 12,
+    LightMagenta = 13,
+    Yellow = 14,
+    White = 15
+};
+
+void SetOutputColor(int text = 15, int bg = 0) {
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
+}
+
+//#define DEBUG
 
 int main()
 {
-    practical_work_1 fgjfgj;
-    fgjfgj.cout_weight_data_types();
-    system("pause");
+    setlocale(0, "RU");
+    system("color 0F");
+    //system("color 0F");
+
+    //32767 2147483647 4294967295 18446744073709551615 1.1654366436464364364387 1.165436643646436436438745745747245987957895789
+    //              1.1654366436464364364
+    //              1.1654366436464365
+
+    short value1 = -12344; //-32767
+    int value2 = -4521; //-2147483648
+    long value3 = -2147483648; //-2147483648
+    long long value4 = -9223372036854775807; //-9223372036854775807
+    // +
+    unsigned short uvalue1 = 0; //65535
+    unsigned int uvalue2 = 4294967295;
+    unsigned long uvalue3 = 0; //4294967295
+    unsigned long long uvalue4 = 18446744073709551615;
+
+    float valueF = 0.15625;
+
+    double valueD = 1.1654366436464365;
+    long double valueLD = 1.1654366436464365134143143;
+
+    char valueC = -0; //-23
+    char valueC2 = -127;
+    char valueC3 = -1;
+    char valueC4 = -88;
+    unsigned char valueUC = 23;
+
+    BinaryRepresentation object;
+
+    /*SetOutputColor(14);
+    cout << "DEBUG MODULE 1: short/int/long/__int64" << endl;
+    object.convert_dec_to_bin(value1);
+    cout << endl;
+    object.convert_dec_to_bin(value2);
+    cout << endl;
+    object.convert_dec_to_bin(value3);
+    cout << endl;
+    object.convert_dec_to_bin(value4);
+    cout << endl;
+    cout << endl;*/
+
+    /*SetOutputColor(13);
+    cout << "DEBUG MODULE 2: U short/U int/U long/U __int64" << endl;
+    object.convert_dec_to_bin(uvalue1);
+    cout << endl;
+    object.convert_dec_to_bin(uvalue2);
+    cout << endl;
+    object.convert_dec_to_bin(uvalue3);
+    cout << endl;
+    object.convert_dec_to_bin(uvalue4);
+    cout << endl;
+    cout << endl;*/
+
+    SetOutputColor(1);
+    cout << "DEBUG MODULE 3: float" << endl;
+    object.convert_dec_to_bin(valueF);
+    cout << endl;
+    cout << endl;
+
+    SetOutputColor(9);
+    cout << "DEBUG MODULE 4: double / L double" << endl;
+    object.convert_dec_to_bin(valueD);
+    cout << endl;
+    object.convert_dec_to_bin(valueLD);
+    cout << endl;
+    cout << endl;
+
+    /*SetOutputColor();
+    cout << "DEBUG MODULE 5: char / U char" << endl;
+    object.convert_dec_to_bin(valueC);
+    cout << endl;
+    object.convert_dec_to_bin(valueC2);
+    cout << endl;
+    object.convert_dec_to_bin(valueC3);
+    cout << endl;
+    object.convert_dec_to_bin(valueC4);
+    cout << endl;*/
+
+    object.convert_dec_to_bin(valueUC);
+    cout << endl;
+
+    cout << endl;
+
+    //system("pause");
 }
+
+//обработать unsigned
+//обработать отображение
+//обработать неточность округления (обработать блок восстановления числа)

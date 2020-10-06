@@ -148,10 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="coursework_1.cpp" />
-    <ClCompile Include="practical_work_1.cpp" />
+    <ClCompile Include="BinaryRepresentation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="practical_work_1.h" />
+    <ClInclude Include="BinaryRepresentation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

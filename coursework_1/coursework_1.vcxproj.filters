@@ -18,12 +18,12 @@
     <ClCompile Include="coursework_1.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="practical_work_1.cpp">
+    <ClCompile Include="BinaryRepresentation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="practical_work_1.h">
+    <ClInclude Include="BinaryRepresentation.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
