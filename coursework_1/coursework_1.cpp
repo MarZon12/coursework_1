@@ -56,8 +56,16 @@ int main()
     unsigned long long uvalue4 = 18446744073709551615;
 
     float valueF = 0.15625;
+    float valueF2 = 0;
+    float valueF3 = 1.15625;
+    float valueF4 = 12.15625;
 
-    double valueD = 1.1654366436464365;
+
+    double valueD = -0.1654366436464365;
+    double valueD2 = -0;
+    double valueD3 = -1.1654366436464365;
+    double valueD4 = -13.1654366436464365;
+
     long double valueLD = 1.1654366436464365134143143;
 
     char valueC = -0; //-23
@@ -96,13 +104,23 @@ int main()
     cout << "DEBUG MODULE 3: float" << endl;
     object.convert_dec_to_bin(valueF);
     cout << endl;
+    object.convert_dec_to_bin(valueF2);
+    cout << endl;
+    object.convert_dec_to_bin(valueF3);
+    cout << endl;
+    object.convert_dec_to_bin(valueF4);
+    cout << endl;
     cout << endl;
 
     SetOutputColor(9);
     cout << "DEBUG MODULE 4: double / L double" << endl;
     object.convert_dec_to_bin(valueD);
     cout << endl;
-    object.convert_dec_to_bin(valueLD);
+    object.convert_dec_to_bin(valueD2);
+    cout << endl;
+    object.convert_dec_to_bin(valueD3);
+    cout << endl;
+    object.convert_dec_to_bin(valueD4);
     cout << endl;
     cout << endl;
 
@@ -117,8 +135,8 @@ int main()
     object.convert_dec_to_bin(valueC4);
     cout << endl;*/
 
-    object.convert_dec_to_bin(valueUC);
-    cout << endl;
+   /* object.convert_dec_to_bin(valueUC);
+    cout << endl;*/
 
     cout << endl;
 

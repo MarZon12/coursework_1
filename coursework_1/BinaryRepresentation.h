@@ -6,7 +6,9 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-#define DEBUG
+//#define DEBUG
+#define DEBUG_RESULT
+
 
 
 
@@ -145,9 +147,11 @@ public:
             }
         }
 
+        ///***********************************///
+        ///            PROCESSING             ///
+        ///***********************************///
 
-
-        //processing U integer types and U char types
+        //U integer types and U char types
         if ((data_type_code >= 4 && data_type_code <= 7 || data_type_code == 12) && !is_null) {
             for (size_t i = 0; i < sizeof_data_type_value_x8; i++)
                 if (bin_result_copy[(sizeof_data_type_value_x8 - 1) - i] == '1')
@@ -163,7 +167,7 @@ public:
         //out: preliminary_integer_value <- if not null. 
 
 
-        //processing S integer types and S char types
+        //S integer types and S char types
         if ((data_type_code >= 0 && data_type_code <= 3 || data_type_code == 11) && !is_null) {
             // processing for a negative value 
             if (bin_result_copy[0] == '1')
@@ -211,24 +215,15 @@ public:
                 }
             }
         }
-        //out: preliminary_integer_value (UNSIGNED) <- if not null.
+        //out: preliminary_integer_value (UNSIGNED) && is_negative <- if not null.
+        
+        cout.precision(50); //WARNING
 
-
-        //0 10000010 10101100000000000000000     13.375 FLOAT BIN 32 REAL
-        //01000001 01010110 00000000 00000000 MY 13.375 FLOAT BIN32
-        //0 10000010 1101.01100000000000000000 facticheski 0 130-127=3 1.101011*E^3
-        //0 10000010  10101100000000000000000  MY 13.375 
-
-        //0 01111011  10011001100110011001101 0.1 123-127=-4
-        //0 01111011 1.10011001100110011001101
-        //0 01111011 0.000110011001100110011001101
-        //01000001010101100000000000000000
-
-        //processing floating point-based types
+        //floating point-based types
         short exponent_value = 0; //WARNING
         if ((data_type_code >=8 && data_type_code <= 9) && !is_null)
         {
-            //short full_exponent_value = 0;
+            //short exponent_value = 0;
 
             if (bin_result_copy[0] == '1')
                 is_negative = true;
@@ -242,7 +237,7 @@ public:
                 if (bin_result_copy[exponent_size - i + 1] == '1')
                     exponent_value += unsigned long long(pow(2, i - 1));
             }
-            // cutting off part of the exponent
+            // subtracting the offset
             switch (data_type_code)
             {
             case 8:
@@ -255,21 +250,92 @@ public:
                 break;
             }
 
+
+
             //mantissa
-            for (size_t i = 0; i < length; i++)
+            if (exponent_value == 0)
             {
+                preliminary_integer_value = 1;
+                for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
+                {
+#ifdef DEBUG
+                    cout << "preliminary_fractional_value i[" << i << "]  [" << (exponent_size + 1) - i - 1 << "] " << bool(bin_result_copy[i] == '1') << " = "<< pow(2, (exponent_size + 1) - i - 1) << endl;
+#endif // DEBUG
+                    if (bin_result_copy[i] == '1')
+                    {
+                        preliminary_fractional_value += pow(2, (exponent_size + 1) - i - 1);
+                    }
+                }
+            }
+
+            if (exponent_value > 0)
+            {
+                //integer
+                for (int i = exponent_size + exponent_value; i > exponent_size; i--)
+                {
+#ifdef DEBUG
+                    cout << "preliminary_integer_value i[" << i << "]  [" << exponent_size + exponent_value - i << "] " << bool(bin_result_copy[i] == '1') << " = " << unsigned long long(pow(2, exponent_size + exponent_value - i)) << endl;
+#endif // DEBUG
+                    if (bin_result_copy[i] == '1')
+                        preliminary_integer_value += unsigned long long (pow(2, exponent_size + exponent_value - i));
+
+                    if (i == exponent_size + 1) {
+#ifdef DEBUG
+                        cout << "pow(2, exponent_size + exponent_value - i + 1) = " << unsigned long long(pow(2, exponent_size + exponent_value - i + 1)) << endl;
+#endif // DEBUG
+                        preliminary_integer_value += unsigned long long(pow(2, exponent_size + exponent_value - i + 1));
+                    }
+                }
+
+                //after dot
+                for (int i = exponent_size + exponent_value + 1; i < sizeof_data_type_value_x8; i++)
+                {
+#ifdef DEBUG
+                    cout << "preliminary_fractional_value i[" << i << "]  [" << (exponent_size + exponent_value + 1) - i - 1 << "] " << bool(bin_result_copy[i] == '1') << " = " << pow(2, (exponent_size + exponent_value + 1) - i - 1) << endl;
+#endif // DEBUG
+                    if (bin_result_copy[i] == '1')
+                        preliminary_fractional_value += pow(2, (exponent_size + exponent_value + 1) - i - 1);
+                }
 
             }
 
-            //ќ—“јЌќ¬»Ћ—я «ƒ≈—№: представление экспоненты, еЄ рассчет
+            if (exponent_value < 0)
+            {
+                //integer
+                preliminary_integer_value = 0; //WARNING
+
+                //after dot
+                for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
+                {
+#ifdef DEBUG
+                     cout << "preliminary_fractional_value i[" << i << "]  [" << (exponent_size + 1) - i - 1 + exponent_value << "] " << bool(bin_result_copy[i] == '1') << " = " << pow(2, (exponent_size + 1) - i - 1 + exponent_value) << endl;
+#endif // DEBUG
+                    if (bin_result_copy[i] == '1')
+                    {
+                        preliminary_fractional_value += pow(2, (exponent_size + 1) - i - 1 + exponent_value);
+                    }
+                }
+                preliminary_fractional_value += pow(2, exponent_value);
+#ifdef DEBUG
+                cout << "pow(2, exponent_value) = " << pow(2, exponent_value) << endl;
+#endif // DEBUG
+            }
+
+
         }
+        //out: preliminary_integer_value (UNSIGNED) && preliminary_fractional_value (POSITIVE) && is_negative <- if not null.
 
 
+
+        // ќ—“јЌќ¬»Ћ—я “”“: добавить bool, сообщающий об успешном переводе, рассчитать количество цифр после точки и записать все это в массив char
+
+#ifdef DEBUG_RESULT
         cout << "is_null = " << is_null << endl;
         cout << "is_negative = " << is_negative << endl;
-        cout << "full_exponent_value = " << exponent_value << endl;
+        cout << "exponent_value = " << exponent_value << endl;
         cout << "preliminary_integer_value = " << preliminary_integer_value << endl;
         cout << "preliminary_fractional_value = " << preliminary_fractional_value << endl << endl << endl;
+#endif // DEBUG_RESULT
 
         delete[] bin_result_copy;
         return 0;
@@ -292,8 +358,8 @@ public:
     char* get_bin_representation() {
         if (!bin_is_initialized) {
             cout << endl << endl << "\t+=========================================================+" << endl
-                << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-                << "\t+=========================================================+" << endl << endl;
+                                 << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
+                                 << "\t+=========================================================+" << endl << endl;
             return nullptr;
         }
         return bin_result;
@@ -339,23 +405,6 @@ private:
 
     bool compare_arrays(const char* first_array, const char* second_array);
 };
-
-//  00111110001000000000000000000000    0x00000000  bin32
-//  00111110001000000000000000000000 MY 0.15625000  float
-//  0 * exponent
-//   01111100 exponent 124
-//           0 * mantiss
-//            1000000000000000000000 mantiss 2097152
-
-    //  0011111111110010101001011010000011100100111000000101011111011101    0x0000000000000000  bin64
-    //  0011111111110010101001011010000011100100111000000101011111011101 MY 1.1654366436464365  double
-    //  0 *
-    //   01111111111 exponent 1023
-    //              0010101001011010000011100100111000000101011111011101 mantiss 745060406679517
-
-    //00111111100101010010110100000111    0x00000000  bin32
-    //00111111100101010010110100000111 MY 1.16543663 (1.1654366436464364364387) float
-
 
 //cout.setf(ios::fixed); //WARNING
 //cout.precision(16);
