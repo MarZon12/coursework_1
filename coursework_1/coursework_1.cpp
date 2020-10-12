@@ -55,16 +55,15 @@ int main()
     unsigned long uvalue3 = 0; //4294967295
     unsigned long long uvalue4 = 18446744073709551615;
 
-    float valueF = 0.15625;
-    float valueF2 = 0;
-    float valueF3 = 1.15625;
-    float valueF4 = 12.15625;
+    float valueF = 0.15625;        // 0.156250000
+    float valueF2 = 0;             // 0.00000000
+    float valueF3 = 1.15625;       // 1.15625000
+    float valueF4 = 12.15625;      //12.1562500
 
-
-    double valueD = -0.1654366436464365;
-    double valueD2 = -0;
-    double valueD3 = -1.1654366436464365;
-    double valueD4 = -13.1654366436464365;
+    double valueD =  -0.16543664364643657; //-  0.16543664364643651
+    double valueD2 =  0.1654366436464365;  //+  0.16543664364643651
+    double valueD3 = -1.1654366436464365;  //-  1.1654366436464365
+    double valueD4 = -13.1654366436464365; //- 13.165436643646437
 
     long double valueLD = 1.1654366436464365134143143;
 
@@ -76,7 +75,7 @@ int main()
 
     BinaryRepresentation object;
 
-    /*SetOutputColor(14);
+    SetOutputColor(14);
     cout << "DEBUG MODULE 1: short/int/long/__int64" << endl;
     object.convert_dec_to_bin(value1);
     cout << endl;
@@ -86,7 +85,7 @@ int main()
     cout << endl;
     object.convert_dec_to_bin(value4);
     cout << endl;
-    cout << endl;*/
+    cout << endl;
 
     /*SetOutputColor(13);
     cout << "DEBUG MODULE 2: U short/U int/U long/U __int64" << endl;
@@ -112,6 +111,7 @@ int main()
     cout << endl;
     cout << endl;
 
+   
     SetOutputColor(9);
     cout << "DEBUG MODULE 4: double / L double" << endl;
     object.convert_dec_to_bin(valueD);
