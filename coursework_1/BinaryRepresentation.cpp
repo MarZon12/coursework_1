@@ -1,7 +1,5 @@
 #include "BinaryRepresentation.h"
 
-
-
 void BinaryRepresentation::cout_weight_data_types() {
 	cout << "Объем памяти, занимаемой различными типами данных:" << endl;
 	
@@ -18,13 +16,13 @@ void BinaryRepresentation::cout_weight_data_types() {
 void BinaryRepresentation::initialize_the_data_type_code() {
     //converting the variable type to a numeric code: find the sum of the codes of all characters of the data type, getting the preliminary data type code
     unsigned short preliminary_data_type_code = 0;
-    for (size_t i = 0; i < strlen(data_type); i++)
+    for (int i = 0; i < strlen(data_type); i++)
     {
         preliminary_data_type_code += data_type[i];
     }
 
-    //setting the final code of the data type
-    //P.s. S = Signed; U = Unsigned; __int64 = long long
+    // setting the final code of the data type
+    // S = Signed; U = Unsigned; __int64 = long long
     switch (preliminary_data_type_code)
     {
     // SECTION 1: SIGNED INTEGER
@@ -126,13 +124,13 @@ bool BinaryRepresentation::compare_arrays(const char* first_array, const char* s
     return true;
 }
 
-bool BinaryRepresentation::convert_bin_to_dec() {
+char* BinaryRepresentation::convert_bin_to_dec() {
     if (!bin_is_initialized)
     {
         cout << endl << endl << "\t+=========================================================+" << endl
             << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
             << "\t+=========================================================+" << endl << endl;
-        return 0;
+        return nullptr;
     }
 
     //check for the list of supported variable data types
@@ -140,7 +138,7 @@ bool BinaryRepresentation::convert_bin_to_dec() {
     {
         cout << "Переменная не может быть преобразована в десятичное представление, поскольку ее нет в списке поддерживаемых" << endl;
         cout << "The variable cannot be converted to a decimal representation because it is not in the supported list" << endl;
-        return 0;
+        return nullptr;
     }
 
     unsigned long long preliminary_integer_value = 0;
@@ -155,7 +153,7 @@ bool BinaryRepresentation::convert_bin_to_dec() {
 
     //creating a copy of the bin_result array
     char* bin_result_copy = new char[sizeof_data_type_value_x8 + 1]{ 0 };
-    char_array_copy(bin_result_copy, sizeof_data_type_value_x8, bin_result);
+    this->char_array_copy(bin_result_copy, sizeof_data_type_value_x8, bin_result);
 
     //checking for zero
     for (int i = 0; i < sizeof_data_type_value_x8; i++)
@@ -236,7 +234,6 @@ bool BinaryRepresentation::convert_bin_to_dec() {
     }
     //out: preliminary_integer_value (UNSIGNED) && is_negative <- if not null.
 
-    cout.precision(50); //WARNING
 
     //floating point-based types
     if ((data_type_code >= 8 && data_type_code <= 9) && !is_null)
@@ -366,12 +363,23 @@ bool BinaryRepresentation::convert_bin_to_dec() {
     // string factory
     if (is_negative)
         dec_result[0] = '-';
-    char_array_copy(dec_result, strlen(dec_result_int_buffer), dec_result_int_buffer, is_negative); //int
+    this->char_array_copy(dec_result, strlen(dec_result_int_buffer), dec_result_int_buffer, is_negative); //int
     if (preliminary_fractional_value != 9)
-        char_array_copy(dec_result, strlen(dec_result_fra_buffer) + 1, dec_result_fra_buffer, strlen(dec_result_int_buffer) + is_negative, 1);
-    // учесть знак
+        this->char_array_copy(dec_result, strlen(dec_result_fra_buffer) + 1, dec_result_fra_buffer, strlen(dec_result_int_buffer) + is_negative, 1);
+
+    ////string cleaner
+    //int dec_result_strlen = strlen(dec_result);
+    //for (int i = 0; i <= dec_result_strlen; i++)
+    //{
+    //    if (dec_result[dec_result_strlen - i] == '0')
+    //        dec_result[dec_result_strlen - i] = 0;
+    //    else
+    //        break;
+    //}
 
 #ifdef DEBUG_RESULT
+    /*cout << "dec_result_strlen = " << dec_result_strlen << endl;*/
+
     cout << "dec_result_int_buffer = " << dec_result_int_buffer << ' ' << strlen(dec_result_int_buffer) << endl;
     cout << "dec_result_fra_buffer = " << dec_result_fra_buffer << ' ' << strlen(dec_result_fra_buffer) << endl;
     cout << "dec_result = " << dec_result << ' ' << strlen(dec_result) << endl;
@@ -382,10 +390,37 @@ bool BinaryRepresentation::convert_bin_to_dec() {
     cout << "preliminary_fractional_value = " << preliminary_fractional_value << endl << endl << endl;
 #endif // DEBUG_RESULT
 
+    dec_is_initialized = true;
     delete[] bin_result_copy;
-    return 0;
+    return dec_result;
 };
 
+
+void BinaryRepresentation::SetOutputColor(int text, int bg) {
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
+}
+
+
+char* BinaryRepresentation::get_dec_representation() {
+    if (!dec_is_initialized) {
+        cout << endl << endl << "\t+=========================================================+" << endl
+            << "\t|Attention! You didn't convert a binary number to decimal!|" << endl
+            << "\t+=========================================================+" << endl << endl;
+        return nullptr;
+    }
+    return dec_result;
+}
+
+char* BinaryRepresentation::get_bin_representation() {
+    if (!bin_is_initialized) {
+        cout << endl << endl << "\t+=========================================================+" << endl
+            << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
+            << "\t+=========================================================+" << endl << endl;
+        return nullptr;
+    }
+    return bin_result;
+}
 
 BinaryRepresentation::BinaryRepresentation() {
     bin_result = nullptr;

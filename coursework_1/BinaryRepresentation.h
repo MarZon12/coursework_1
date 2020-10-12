@@ -1,13 +1,14 @@
 #pragma once
 #include <iostream>
 #include <cmath>
+#include <windows.h>
 
 using std::cout;
 using std::cin;
 using std::endl;
 
 //#define DEBUG
-#define DEBUG_RESULT
+//#define DEBUG_RESULT
 
 
 
@@ -36,18 +37,18 @@ public:
         ToolUnion tools;
         tools.data_type_value = all_standart_data_type_value;
 
-        // initialization
+        // initialization data type
         data_type = new char[strlen(typeid(all_standart_data_type_value).name()) + 1];
-        char_array_copy(data_type, strlen(typeid(all_standart_data_type_value).name()), typeid(all_standart_data_type_value).name());
-        initialize_the_data_type_code();
+        this->char_array_copy(data_type, strlen(typeid(all_standart_data_type_value).name()), typeid(all_standart_data_type_value).name());
+        this->initialize_the_data_type_code();
         if (data_type_code > 12 || data_type_code == 10)
         {
-            cout << "Переменная не может быть преобразована в двоичное представление, поскольку ее нет в списке поддерживаемых типов данных" << endl;
-            cout << "The variable cannot be converted to a binary representation because it is not in the supported data types list" << endl;
+            cout << "Переменная не может быть преобразована в двоичное представление, поскольку ее нет в списке поддерживаемых" << endl;
+            cout << "The variable cannot be converted to a binary representation because it is not in the supported list" << endl;
             return nullptr;
         }
 
-        variable_value = static_cast<long double>(all_standart_data_type_value);
+        variable_value = static_cast<long double>(all_standart_data_type_value); //WARNING
         sizeof_data_type_value_x8 = 8 * sizeof(tools.data_type_value);
 
         bin_result = new char[sizeof_data_type_value_x8 + 1]{ 0 };
@@ -63,8 +64,8 @@ public:
 
         bin_is_initialized = true;
 
-        cout_binary_representation(); //WARNING
-        convert_bin_to_dec(); //WARNING
+        this->cout_binary_representation(); //WARNING
+        this->convert_bin_to_dec(); //WARNING
 
         return bin_result;
 	};
@@ -79,22 +80,29 @@ public:
             return 0;
         }
         
-        //17 double; 
-        cout.precision(19);
+        //17 double;
         
-        cout << "Тип переменной: " << data_type << endl;//" code: " << data_type_code << endl;
-        cout << "Значение: " << variable_value << endl;
-   
-        cout << "Формат представления: знак экспонента(порядок) матисса" << endl;
-  
+        cout << "Тип переменной: " << data_type; //" code: " << data_type_code << endl; //WARNING
+        cout << "Значение: " << convert_bin_to_dec() << endl;
+
+        cout << "Формат представления: " << endl;
+        this->SetOutputColor(2);
+        cout << "знак ";
+        this->SetOutputColor(4);
+        cout << "экспонента(порядок) ";
+        this->SetOutputColor(6);
+        cout<< "матисса" << endl;
+        this->SetOutputColor();
         //знак
         //sign
+        this->SetOutputColor(2);
         cout << bin_result[0];
 
         //отделение знака
-        if (data_type_code >= 0 && data_type_code <= 3 || data_type_code >= 8 && data_type_code <= 10 || data_type_code == 11)
+        if (data_type_code >= 0 && data_type_code <= 7 || data_type_code >= 8 && data_type_code <= 10 || data_type_code == 11)
             cout << ' ';
 
+        this->SetOutputColor(4);
         //exponent
         if (exponent_size != 0)
         {
@@ -105,42 +113,27 @@ public:
             cout << ' ';
         }
 
+        this->SetOutputColor(6);
         //mantissa
         for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
         {
             cout << bin_result[i];
         }
         cout << endl;
+        this->SetOutputColor();
 
         return 1;
     };
 
-    //returns 1 if the operation was successful; 0 if an error occurred or some variables were not initialized
-    bool convert_bin_to_dec();
+    //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
+    char* convert_bin_to_dec();
 
-    //getters
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
-    char* get_dec_representation() {
-        if (!dec_is_initialized) {
-            cout << endl << endl << "\t+=========================================================+" << endl
-                                 << "\t|Attention! You didn't convert a binary number to decimal!|" << endl
-                                 << "\t+=========================================================+" << endl << endl;
-            return nullptr;
-        }
-        return dec_result;
-    }
+    char* get_dec_representation();
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
-    char* get_bin_representation() {
-        if (!bin_is_initialized) {
-            cout << endl << endl << "\t+=========================================================+" << endl
-                                 << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-                                 << "\t+=========================================================+" << endl << endl;
-            return nullptr;
-        }
-        return bin_result;
-    }
+    char* get_bin_representation();
 
 private:
     // stores the binary representation of a number
@@ -162,7 +155,7 @@ private:
     // default: 0
     unsigned short data_type_code;
 
-    long double variable_value; //default: 0
+    long double variable_value; //default: 0      //WARNING
     int sizeof_data_type_value_x8; //default: 0
 
     // number of bits of memory occupied by the exponent
@@ -175,14 +168,14 @@ private:
     bool enable_colors;  //default: true
 
 
+    void SetOutputColor(int text = 15, int bg = 0);
+
     void initialize_the_data_type_code();
 
     // don't forget to leave the last character of the array under the null-terminator, which means the end of the string
     void char_array_copy(char* destination_str, size_t number_of_characters_to_copy, const char* source_str, size_t destination_pos_offset = 0, size_t source_pos_offset = 0, bool replace_spaces_with_underscores = false);
 
     bool compare_arrays(const char* first_array, const char* second_array);
-
-    
 };
 
 //cout.setf(ios::fixed); //WARNING

@@ -4,7 +4,6 @@
 
 #include "BinaryRepresentation.h"
 
-//using
 using std::cout;
 using std::cin;
 using std::endl;
@@ -39,21 +38,18 @@ int main()
 {
     setlocale(0, "RU");
     system("color 0F");
-    //system("color 0F");
 
-    //32767 2147483647 4294967295 18446744073709551615 1.1654366436464364364387 1.165436643646436436438745745747245987957895789
-    //              1.1654366436464364364
-    //              1.1654366436464365
 
     short value1 = -12344; //-32767
     int value2 = -4521; //-2147483648
     long value3 = -2147483648; //-2147483648
     long long value4 = -9223372036854775807; //-9223372036854775807
-    // +
+
     unsigned short uvalue1 = 0; //65535
     unsigned int uvalue2 = 4294967295;
     unsigned long uvalue3 = 0; //4294967295
     unsigned long long uvalue4 = 18446744073709551615;
+
 
     float valueF = 0.15625;        // 0.156250000
     float valueF2 = 0;             // 0.00000000
@@ -67,6 +63,7 @@ int main()
 
     long double valueLD = 1.1654366436464365134143143;
 
+
     char valueC = -0; //-23
     char valueC2 = -127;
     char valueC3 = -1;
@@ -75,8 +72,9 @@ int main()
 
     BinaryRepresentation object;
 
-    SetOutputColor(14);
-    cout << "DEBUG MODULE 1: short/int/long/__int64" << endl;
+    //SetOutputColor(14);
+
+    cout << endl << "DEBUG MODULE 1: short/int/long/__int64" << endl;
     object.convert_dec_to_bin(value1);
     cout << endl;
     object.convert_dec_to_bin(value2);
@@ -87,8 +85,9 @@ int main()
     cout << endl;
     cout << endl;
 
-    /*SetOutputColor(13);
-    cout << "DEBUG MODULE 2: U short/U int/U long/U __int64" << endl;
+    //SetOutputColor(13);
+
+    cout << endl << "DEBUG MODULE 2: U short/U int/U long/U __int64" << endl;
     object.convert_dec_to_bin(uvalue1);
     cout << endl;
     object.convert_dec_to_bin(uvalue2);
@@ -97,10 +96,11 @@ int main()
     cout << endl;
     object.convert_dec_to_bin(uvalue4);
     cout << endl;
-    cout << endl;*/
+    cout << endl;
 
-    SetOutputColor(1);
-    cout << "DEBUG MODULE 3: float" << endl;
+    //SetOutputColor(1);
+
+    cout << endl << "DEBUG MODULE 3: float" << endl;
     object.convert_dec_to_bin(valueF);
     cout << endl;
     object.convert_dec_to_bin(valueF2);
@@ -112,8 +112,9 @@ int main()
     cout << endl;
 
    
-    SetOutputColor(9);
-    cout << "DEBUG MODULE 4: double / L double" << endl;
+    //SetOutputColor(9);
+
+    cout << endl << "DEBUG MODULE 4: double / L double" << endl;
     object.convert_dec_to_bin(valueD);
     cout << endl;
     object.convert_dec_to_bin(valueD2);
@@ -124,8 +125,10 @@ int main()
     cout << endl;
     cout << endl;
 
-    /*SetOutputColor();
-    cout << "DEBUG MODULE 5: char / U char" << endl;
+    //SetOutputColor();
+
+    cout << endl << "DEBUG MODULE 5: char / U char" << endl;
+
     object.convert_dec_to_bin(valueC);
     cout << endl;
     object.convert_dec_to_bin(valueC2);
@@ -133,7 +136,7 @@ int main()
     object.convert_dec_to_bin(valueC3);
     cout << endl;
     object.convert_dec_to_bin(valueC4);
-    cout << endl;*/
+    cout << endl;
 
    /* object.convert_dec_to_bin(valueUC);
     cout << endl;*/
@@ -142,7 +145,3 @@ int main()
 
     //system("pause");
 }
-
-//обработать unsigned
-//обработать отображение
-//обработать неточность округления (обработать блок восстановления числа)
