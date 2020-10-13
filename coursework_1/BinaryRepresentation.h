@@ -48,7 +48,6 @@ public:
             return nullptr;
         }
 
-        variable_value = static_cast<long double>(all_standart_data_type_value); //WARNING
         sizeof_data_type_value_x8 = 8 * sizeof(tools.data_type_value);
 
         bin_result = new char[sizeof_data_type_value_x8 + 1]{ 0 };
@@ -71,59 +70,7 @@ public:
 	};
 
     //returns 1 if output is successful; 0 if an error occurred or some variables were not initialized
-    bool cout_binary_representation() {
-        if (!bin_is_initialized)
-        {
-            cout << endl << endl << "\t+=========================================================+" << endl
-                                 << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-                                 << "\t+=========================================================+" << endl << endl;
-            return 0;
-        }
-        
-        //17 double;
-        
-        cout << "Тип переменной: " << data_type; //" code: " << data_type_code << endl; //WARNING
-        cout << "Значение: " << convert_bin_to_dec() << endl;
-
-        cout << "Формат представления: " << endl;
-        this->SetOutputColor(2);
-        cout << "знак ";
-        this->SetOutputColor(4);
-        cout << "экспонента(порядок) ";
-        this->SetOutputColor(6);
-        cout<< "матисса" << endl;
-        this->SetOutputColor();
-        //знак
-        //sign
-        this->SetOutputColor(2);
-        cout << bin_result[0];
-
-        //отделение знака
-        if (data_type_code >= 0 && data_type_code <= 7 || data_type_code >= 8 && data_type_code <= 10 || data_type_code == 11)
-            cout << ' ';
-
-        this->SetOutputColor(4);
-        //exponent
-        if (exponent_size != 0)
-        {
-            for (int i = 1; i <= exponent_size; i++)
-            {
-                cout << bin_result[i];
-            }
-            cout << ' ';
-        }
-
-        this->SetOutputColor(6);
-        //mantissa
-        for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
-        {
-            cout << bin_result[i];
-        }
-        cout << endl;
-        this->SetOutputColor();
-
-        return 1;
-    };
+    bool cout_binary_representation();
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
     char* convert_bin_to_dec();
@@ -155,7 +102,6 @@ private:
     // default: 0
     unsigned short data_type_code;
 
-    long double variable_value; //default: 0      //WARNING
     int sizeof_data_type_value_x8; //default: 0
 
     // number of bits of memory occupied by the exponent
@@ -177,9 +123,3 @@ private:
 
     bool compare_arrays(const char* first_array, const char* second_array);
 };
-
-//cout.setf(ios::fixed); //WARNING
-//cout.precision(16);
-
-// добавить взятие значения заместо копирования переменной, ц: оптимизация памяти
-// const MyString & other <- оптимизация памяти

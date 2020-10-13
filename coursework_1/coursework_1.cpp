@@ -8,8 +8,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-enum ConsoleColor {
-    Black = 0,
+    /*Black = 0,
     Blue = 1,
     Green = 2,
     Cyan = 3,
@@ -24,8 +23,7 @@ enum ConsoleColor {
     LightRed = 12,
     LightMagenta = 13,
     Yellow = 14,
-    White = 15
-};
+    White = 15*/
 
 void SetOutputColor(int text = 15, int bg = 0) {
     HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -73,6 +71,9 @@ int main()
     BinaryRepresentation object;
 
     //SetOutputColor(14);
+
+    object.cout_weight_data_types();
+    cout << endl;
 
     cout << endl << "DEBUG MODULE 1: short/int/long/__int64" << endl;
     object.convert_dec_to_bin(value1);
