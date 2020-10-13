@@ -13,116 +13,69 @@ void BinaryRepresentation::cout_weight_data_types() {
 		 << "bool:        " << sizeof(bool) << " byte" << endl;
 }
 
-void BinaryRepresentation::initialize_the_data_type_code() {
-    //converting the variable type to a numeric code: find the sum of the codes of all characters of the data type, getting the preliminary data type code
-    unsigned short preliminary_data_type_code = 0;
-    for (int i = 0; i < strlen(data_type); i++)
+bool BinaryRepresentation::cout_binary_representation() {
+    if (!bin_is_initialized)
     {
-        preliminary_data_type_code += data_type[i];
+        cout << endl << endl << "\t+=========================================================+" << endl
+            << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
+            << "\t+=========================================================+" << endl << endl;
+        return 0;
     }
 
-    // setting the final code of the data type
-    // S = Signed; U = Unsigned; __int64 = long long
-    switch (preliminary_data_type_code)
+
+    cout << "“ип переменной: " << data_type << endl; //" code: " << data_type_code << endl; //WARNING
+    cout << "«начение: " << this->convert_bin_to_dec() << endl;
+
+    cout << "‘ормат представлени€: " << endl;
+
+    //sign
+    this->SetOutputColor(2, 0, enable_colors);
+    cout << "знак";
+
+    //exponent
+    if (data_type_code >= 8 && data_type_code <= 10)
     {
-    // SECTION 1: SIGNED INTEGER
-    case 560: //S short
-        data_type_code = 0;
-        exponent_size = 0;
-        break;
-
-    case 331: //S int
-        data_type_code = 1;
-        exponent_size = 0;
-        break;
-
-    case 432: //S long
-        data_type_code = 2;
-        exponent_size = 0;
-        break;
-
-    case 627: //S __int64
-        data_type_code = 3;
-        exponent_size = 0;
-        break;
-
-    // SECTION 2: UNSIGNED INTEGER
-    case 1453: //U short
-        data_type_code = 4;
-        exponent_size = 0;
-        break;
-
-    case 1224: //U int
-        data_type_code = 5;
-        exponent_size = 0;
-        break;
-
-    case 1325: //U long
-        data_type_code = 6;
-        exponent_size = 0;
-        break;
-
-    case 1520: //U __int64
-        data_type_code = 7;
-        exponent_size = 0;
-        break;
-
-    // SECTION 3: FLOATING POINTЦBASED
-    case 534: //float
-        data_type_code = 8;
-        exponent_size = 8;
-        break;
-
-    case 635: //double
-        data_type_code = 9;
-        exponent_size = 11;
-        break;
-
-    case 1099: //long double
-        data_type_code = 10;
-        exponent_size = 0; // WARNING
-        break;
-
-    // SECTION 4: CHARACTER
-    case 414: //S char
-        data_type_code = 11;
-        exponent_size = 0;
-        break;
-
-    case 1307: //U char
-        data_type_code = 12;
-        exponent_size = 0;
-        break;
-
-    // SECTION 5: ANOTHER
-    default: //everything else, if not included in the supported list
-        data_type_code = 9999;
-        exponent_size = 0;
-        break;
+        this->SetOutputColor(4, 0, enable_colors);
+        cout << " экспонента(пор€док)";
     }
-}
 
-void BinaryRepresentation::char_array_copy(char* destination_str, size_t number_of_characters_to_copy, const char* source_str, size_t destination_pos_offset, size_t source_pos_offset, bool replace_spaces_with_underscores) {
-    for (size_t i = 0; i < number_of_characters_to_copy; i++)
-        destination_str[i+destination_pos_offset] = source_str[i+source_pos_offset];
-    destination_str[number_of_characters_to_copy + destination_pos_offset] = '\0';
-    // Replacing spaces with underscores
-    if (replace_spaces_with_underscores)
-        for (size_t i = 0; i < number_of_characters_to_copy; i++)
-            if (destination_str[i] == ' ')
-                destination_str[i] = '_';
-}
+    //mantissa
+    this->SetOutputColor(6, 0, enable_colors);
+    cout << " матисса" << endl;
+    this->SetOutputColor();
 
-bool BinaryRepresentation::compare_arrays(const char* first_array, const char* second_array) {
-    if (strlen(first_array) != strlen(second_array))
-        return false;
 
-    for (size_t i = 0; i < strlen(first_array); i++)
-        if (first_array[i] != second_array[i])
-            return false;
+    //sign
+    this->SetOutputColor(2,0,enable_colors);
+    cout << bin_result[0];
 
-    return true;
-}
+    //sign separation
+    if (data_type_code >= 0 && data_type_code <= 7 || data_type_code >= 8 && data_type_code <= 10 || data_type_code == 11)
+        cout << ' ';
+
+    //exponent
+    if (exponent_size != 0)
+    {
+        this->SetOutputColor(4, 0, enable_colors);
+        for (int i = 1; i <= exponent_size; i++)
+        {
+            cout << bin_result[i];
+        }
+        cout << ' ';
+    }
+
+    //mantissa
+    this->SetOutputColor(6, 0, enable_colors);
+    for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
+    {
+        cout << bin_result[i];
+    }
+    cout << endl;
+
+
+    this->SetOutputColor();
+    return 1;
+};
 
 char* BinaryRepresentation::convert_bin_to_dec() {
     if (!bin_is_initialized)
@@ -395,69 +348,8 @@ char* BinaryRepresentation::convert_bin_to_dec() {
     return dec_result;
 };
 
-bool BinaryRepresentation::cout_binary_representation() {
-    if (!bin_is_initialized)
-    {
-        cout << endl << endl << "\t+=========================================================+" << endl
-            << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-            << "\t+=========================================================+" << endl << endl;
-        return 0;
-    }
 
-
-    cout << "“ип переменной: " << data_type << endl; //" code: " << data_type_code << endl; //WARNING
-    cout << "«начение: " << this->convert_bin_to_dec() << endl;
-
-    cout << "‘ормат представлени€: " << endl;
-    this->SetOutputColor(2);
-    cout << "знак";
-    if (data_type_code >=8 && data_type_code <= 10)
-    {
-        this->SetOutputColor(4);
-        cout << " экспонента(пор€док)";
-    }
-    
-    this->SetOutputColor(6);
-    cout << " матисса" << endl;
-    this->SetOutputColor();
-
-    //sign
-    this->SetOutputColor(2);
-    cout << bin_result[0];
-
-    //sign separation
-    if (data_type_code >= 0 && data_type_code <= 7 || data_type_code >= 8 && data_type_code <= 10 || data_type_code == 11)
-        cout << ' ';
-
-    this->SetOutputColor(4);
-    //exponent
-    if (exponent_size != 0)
-    {
-        for (int i = 1; i <= exponent_size; i++)
-        {
-            cout << bin_result[i];
-        }
-        cout << ' ';
-    }
-
-    this->SetOutputColor(6);
-    //mantissa
-    for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
-    {
-        cout << bin_result[i];
-    }
-    cout << endl;
-    this->SetOutputColor();
-
-    return 1;
-};
-
-void BinaryRepresentation::SetOutputColor(int text, int bg) {
-    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
-}
-
-
+//getters
 char* BinaryRepresentation::get_dec_representation() {
     if (!dec_is_initialized) {
         cout << endl << endl << "\t+=========================================================+" << endl
@@ -478,6 +370,138 @@ char* BinaryRepresentation::get_bin_representation() {
     return bin_result;
 }
 
+
+//setters
+void BinaryRepresentation::set_enable_colors(bool enable) {
+    enable_colors = enable;
+}
+
+
+
+//private
+void BinaryRepresentation::SetOutputColor(int text, int bg, bool is_enable_colors) {
+    if (is_enable_colors)
+    {
+        HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
+    }
+}
+
+void BinaryRepresentation::initialize_the_data_type_code() {
+    //converting the variable type to a numeric code: find the sum of the codes of all characters of the data type, getting the preliminary data type code
+    unsigned short preliminary_data_type_code = 0;
+    for (int i = 0; i < strlen(data_type); i++)
+    {
+        preliminary_data_type_code += data_type[i];
+    }
+
+    // setting the final code of the data type
+    // S = Signed; U = Unsigned; __int64 = long long
+    switch (preliminary_data_type_code)
+    {
+        // SECTION 1: SIGNED INTEGER
+    case 560: //S short
+        data_type_code = 0;
+        exponent_size = 0;
+        break;
+
+    case 331: //S int
+        data_type_code = 1;
+        exponent_size = 0;
+        break;
+
+    case 432: //S long
+        data_type_code = 2;
+        exponent_size = 0;
+        break;
+
+    case 627: //S __int64
+        data_type_code = 3;
+        exponent_size = 0;
+        break;
+
+        // SECTION 2: UNSIGNED INTEGER
+    case 1453: //U short
+        data_type_code = 4;
+        exponent_size = 0;
+        break;
+
+    case 1224: //U int
+        data_type_code = 5;
+        exponent_size = 0;
+        break;
+
+    case 1325: //U long
+        data_type_code = 6;
+        exponent_size = 0;
+        break;
+
+    case 1520: //U __int64
+        data_type_code = 7;
+        exponent_size = 0;
+        break;
+
+        // SECTION 3: FLOATING POINTЦBASED
+    case 534: //float
+        data_type_code = 8;
+        exponent_size = 8;
+        break;
+
+    case 635: //double
+        data_type_code = 9;
+        exponent_size = 11;
+        break;
+
+    case 1099: //long double
+        data_type_code = 10;
+        exponent_size = 0; // WARNING
+        break;
+
+        // SECTION 4: CHARACTER
+    case 414: //S char
+        data_type_code = 11;
+        exponent_size = 0;
+        break;
+
+    case 1307: //U char
+        data_type_code = 12;
+        exponent_size = 0;
+        break;
+
+        // SECTION 5: ANOTHER
+    default: //everything else, if not included in the supported list
+        data_type_code = 9999;
+        exponent_size = 0;
+        break;
+    }
+}
+
+void BinaryRepresentation::char_array_copy(char* destination_str, size_t number_of_characters_to_copy, const char* source_str, size_t destination_pos_offset, size_t source_pos_offset, bool replace_spaces_with_underscores) {
+    for (size_t i = 0; i < number_of_characters_to_copy; i++)
+        destination_str[i + destination_pos_offset] = source_str[i + source_pos_offset];
+    
+    destination_str[number_of_characters_to_copy + destination_pos_offset] = '\0';
+    
+    // Replacing spaces with underscores
+    if (replace_spaces_with_underscores)
+        for (size_t i = 0; i < number_of_characters_to_copy; i++)
+            if (destination_str[i] == ' ')
+                destination_str[i] = '_';
+}
+
+bool BinaryRepresentation::compare_arrays(const char* first_array, const char* second_array) {
+    if (strlen(first_array) != strlen(second_array))
+        return false;
+
+    for (size_t i = 0; i < strlen(first_array); i++)
+        if (first_array[i] != second_array[i])
+            return false;
+
+    return true;
+}
+
+
+
 BinaryRepresentation::BinaryRepresentation() {
     bin_result = nullptr;
     dec_result = nullptr;
@@ -485,13 +509,12 @@ BinaryRepresentation::BinaryRepresentation() {
 
     bin_is_initialized = false;
     dec_is_initialized = false;
-	enable_colors = true;
+	enable_colors = false;
 
 	data_type_code = 0;
     sizeof_data_type_value_x8 = 0;
     exponent_size = 0;
 }
-
 BinaryRepresentation::~BinaryRepresentation() {
     delete[] bin_result;
     delete[] dec_result;

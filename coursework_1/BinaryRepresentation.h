@@ -19,9 +19,6 @@ public:
     BinaryRepresentation();
     ~BinaryRepresentation();
 
-    // displays the amount of memory used by different types of variables
-	void cout_weight_data_types();
-
     // [- - - - - - - - - - - - - - - - - - - - - - - - - - IEEE 754 - - - - - - - - - - - - - - - - - - - - - - - - - - -]                                     
     // Converts values of various standard data types to a binary representation and writes them to an array of characters.
     // - - returns a pointer to an array of characters in the binary representation of the value received as a parameter - -
@@ -70,11 +67,15 @@ public:
         return bin_result;
 	};
 
-    //returns 1 if output is successful; 0 if an error occurred or some variables were not initialized
-    bool cout_binary_representation();
-
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
     char* convert_bin_to_dec();
+
+
+    // displays the amount of memory used by different types of variables
+    void cout_weight_data_types();
+
+    //returns 1 if output is successful; 0 if an error occurred or some variables were not initialized
+    bool cout_binary_representation();
 
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
@@ -82,6 +83,8 @@ public:
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
     char* get_bin_representation();
+
+    void set_enable_colors(bool enable);
 
 private:
     // stores the binary representation of a number
@@ -115,7 +118,7 @@ private:
     bool enable_colors;  //default: true
 
 
-    void SetOutputColor(int text = 15, int bg = 0);
+    void SetOutputColor(int text = 15, int bg = 0, bool is_enable_colors = true);
 
     void initialize_the_data_type_code();
 
