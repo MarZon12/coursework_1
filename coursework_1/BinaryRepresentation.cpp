@@ -16,7 +16,8 @@ void BinaryRepresentation::cout_weight_data_types() {
 bool BinaryRepresentation::cout_binary_representation() {
     if (!bin_is_initialized)
     {
-        cout << endl << endl << "\t+=========================================================+" << endl
+        cout << endl << endl 
+            << "\t+=========================================================+" << endl
             << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
             << "\t+=========================================================+" << endl << endl;
         return 0;
@@ -80,7 +81,8 @@ bool BinaryRepresentation::cout_binary_representation() {
 char* BinaryRepresentation::convert_bin_to_dec() {
     if (!bin_is_initialized)
     {
-        cout << endl << endl << "\t+=========================================================+" << endl
+        cout << endl << endl 
+            << "\t+=========================================================+" << endl
             << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
             << "\t+=========================================================+" << endl << endl;
         return nullptr;
@@ -352,7 +354,8 @@ char* BinaryRepresentation::convert_bin_to_dec() {
 //getters
 char* BinaryRepresentation::get_dec_representation() {
     if (!dec_is_initialized) {
-        cout << endl << endl << "\t+=========================================================+" << endl
+        cout << endl << endl 
+            << "\t+=========================================================+" << endl
             << "\t|Attention! You didn't convert a binary number to decimal!|" << endl
             << "\t+=========================================================+" << endl << endl;
         return nullptr;
@@ -362,7 +365,8 @@ char* BinaryRepresentation::get_dec_representation() {
 
 char* BinaryRepresentation::get_bin_representation() {
     if (!bin_is_initialized) {
-        cout << endl << endl << "\t+=========================================================+" << endl
+        cout << endl << endl 
+            << "\t+=========================================================+" << endl
             << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
             << "\t+=========================================================+" << endl << endl;
         return nullptr;

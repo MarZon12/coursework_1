@@ -84,6 +84,7 @@ public:
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
     char* get_bin_representation();
 
+
     void set_enable_colors(bool enable);
 
 private:
