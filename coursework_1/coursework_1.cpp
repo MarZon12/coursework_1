@@ -3,6 +3,7 @@
 #include <windows.h>
 
 #include "BinaryRepresentation.h"
+#include "OneDimensionalStaticArray.h"
 
 using std::cout;
 using std::cin;
@@ -38,12 +39,18 @@ int main()
     setlocale(0, "RU");
     system("color 0F");
 
+    OneDimensionalStaticArray object;
 
-    
+    //object.cout_array();
+    cout << endl;
 
-    BinaryRepresentation object;
+    //cout << endl << endl << endl << "TEST TIME BLOCK START" << endl;
+    object.test_time();
+    //cout << endl << endl << endl << "TEST TIME BLOCK END" << endl;
 
-    //system("pause");
+    //object.cout_array();
+    cout << endl;
+    cout << endl;
 }
 
 /*
