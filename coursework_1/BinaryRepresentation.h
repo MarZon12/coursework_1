@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cmath>
+#include <cstdio>
 #include <windows.h>
 
 using std::cout;
