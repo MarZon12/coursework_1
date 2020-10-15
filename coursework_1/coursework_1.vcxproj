@@ -147,11 +147,11 @@
   <ItemGroup>
     <ClCompile Include="coursework_1.cpp" />
     <ClCompile Include="BinaryRepresentation.cpp" />
-    <ClCompile Include="OneDimensionalStaticArray.cpp" />
+    <ClCompile Include="OneDimensionalStaticIntArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryRepresentation.h" />
-    <ClInclude Include="OneDimensionalStaticArray.h" />
+    <ClInclude Include="OneDimensionalStaticIntArray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

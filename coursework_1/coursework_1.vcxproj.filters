@@ -21,7 +21,7 @@
     <ClCompile Include="BinaryRepresentation.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="OneDimensionalStaticArray.cpp">
+    <ClCompile Include="OneDimensionalStaticIntArray.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="BinaryRepresentation.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="OneDimensionalStaticArray.h">
+    <ClInclude Include="OneDimensionalStaticIntArray.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
