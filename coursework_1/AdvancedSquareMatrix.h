@@ -133,7 +133,8 @@ public:
 			cout_matrix();
 			Sleep(40);
 			//system("pause");
-			system("cls");
+			if(y != CLRM_last_SIZE - 1)
+				system("cls");
 		}
 	}
 
@@ -178,32 +179,37 @@ private:
 		matrix_colors[coord_Y][coord_X] = c_text;
 	}
 
+	void CLRM_constructor() {
+		if (CLRM_last_ROW == nullptr)
+			CLRM_last_ROW = new short[CLRM_last_SIZE] {};
+		
+		if (CLRM_last_COL == nullptr)
+			CLRM_last_COL = new short[CLRM_last_SIZE] {};
+
+		if (CLRM_last_CLR == nullptr) {
+			CLRM_last_CLR = new short[CLRM_last_SIZE] {};
+			for (int i = 0; i < CLRM_last_SIZE; i++)
+			{
+				CLRM_last_CLR[i] = matrix_colors[0][0];
+			}
+		}
+
+		if (CLRM_last_CLR_before == nullptr) {
+			CLRM_last_CLR_before = new short[CLRM_last_SIZE] {};
+			for (int i = 0; i < CLRM_last_SIZE; i++)
+			{
+				CLRM_last_CLR_before[i] = matrix_colors[0][0];
+			}
+		}
+	}
 
 	//STATUS:
 	// 0 - add current (just changed)
 	// >=1 - there is no current item, continue for previously entered items one step further  <- default
 	void martix_color_memory_manipulator(unsigned int coord_ROW = 0, unsigned int coord_COL = 0, unsigned short status = 1, bool save_tail_effect = false, short CLR_current = 2, short CLR_previous = 6, short CLR_post_previous = 4, short CLR_tail = 15) {
 		bool CLR_is_changed = false;
-		if (CLRM_last_ROW == nullptr || CLRM_last_COL == nullptr || CLRM_last_CLR == nullptr || CLRM_last_CLR_before == nullptr)
-		{
-			CLRM_last_ROW = new short[CLRM_last_SIZE] {};
-			CLRM_last_COL = new short[CLRM_last_SIZE] {};
-			CLRM_last_CLR = new short[CLRM_last_SIZE] {};
-			CLRM_last_CLR_before = new short[CLRM_last_SIZE] {};
-			
-			for (int i = 0; i < CLRM_last_SIZE; i++)
-			{
-				CLRM_last_CLR[i] = matrix_colors[0][0];
-				CLRM_last_CLR_before[i] = matrix_colors[0][0];
-			}
-		}
-		else
-		{
-			delete[]CLRM_last_ROW,
-				CLRM_last_COL,
-				CLRM_last_CLR,
-				CLRM_last_CLR_before;
-		}
+
+		CLRM_constructor(); //warning
 		
 		for (int i = 0; i < CLRM_last_SIZE; i++) {
 			if(save_tail_effect && i == 0)

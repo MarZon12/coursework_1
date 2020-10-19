@@ -59,7 +59,6 @@ int main()
     //system("pause");
     //obj.matrix_constructor_interface(20);
     //obj.cout_matrix();
-    obj.fill_matrix_snail();
 
 }
 
