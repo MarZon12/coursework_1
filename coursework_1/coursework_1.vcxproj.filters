@@ -24,12 +24,18 @@
     <ClCompile Include="OneDimensionalStaticIntArray.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="AdvancedSquareMatrix.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryRepresentation.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="OneDimensionalStaticIntArray.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedSquareMatrix.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -145,11 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AdvancedSquareMatrix.cpp" />
     <ClCompile Include="coursework_1.cpp" />
     <ClCompile Include="BinaryRepresentation.cpp" />
     <ClCompile Include="OneDimensionalStaticIntArray.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedSquareMatrix.h" />
     <ClInclude Include="BinaryRepresentation.h" />
     <ClInclude Include="OneDimensionalStaticIntArray.h" />
   </ItemGroup>

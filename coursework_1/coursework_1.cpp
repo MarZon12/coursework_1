@@ -4,7 +4,7 @@
 
 #include "BinaryRepresentation.h"
 #include "OneDimensionalStaticIntArray.h"
-
+#include "AdvancedSquareMatrix.h"
 
 using std::cout;
 using std::cin;
@@ -40,37 +40,27 @@ void SetOutputColor(int text = 15, int bg = 0) {
 }
 
 
+
 int main()
 {
     setlocale(0, "RU");
     system("color 0F");
-    
+
     bool is_cout = 1;
     int value = 0;
     
-    OneDimensionalStaticIntArray object;
-    object.create(10);
-    object.fill_array_rand();
+    AdvancedSquareMatrix obj;
 
-    if (is_cout)
-    {
-        cout << endl;
-        object.cout_array(true);
-    }
-    cout << endl;
-    cout << endl;
-    object.comb_sort(true);
-    cout << endl;
-    cout << endl;
-    if (is_cout)
-    {
-        cout << endl;
-        object.cout_array(true);
-    }
-
+    obj.matrix_constructor_interface(9);
+    //obj.cout_matrix();
+    obj.fill_matrix_snail();
     cout << endl;
     cout << endl;
     //system("pause");
+    //obj.matrix_constructor_interface(20);
+    //obj.cout_matrix();
+    obj.fill_matrix_snail();
+
 }
 
 /*
