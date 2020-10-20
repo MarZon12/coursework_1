@@ -103,37 +103,139 @@ public:
 			for (int y = 0; y < matrix_order; y++)
 			{
 				SetOutputColor(matrix_colors[i][y]);
-				cout << matrix[i][y] << ' ';
+				cout << matrix[i][y] << '\t';
 				SetOutputColor();
 			}
-			cout << endl;
+			cout << endl << endl << endl;
 		}
 	};
 
 	void fill_matrix_snail() {
+		int offset_x = 0;
+		int offset_y = 0;
+		bool is_end = false;
+
 		system("cls");
+
 		matrix_colors_reset_colors(0);
-		for (int i = 0; i < matrix_order; i++)
+
+		CLRM_destructor();
+		CLRM_constructor(4);
+
+		while (true)
 		{
-			for (int y = 0; y < matrix_order; y++)
+			is_end = true;
+			for (int i = offset_x; i < matrix_order - offset_x; i++)
 			{
-				matrix[i][y] = randomize();
-				martix_color_memory_manipulator(i, y, 0, true);
-				//system("cls");
+				matrix[offset_x][i] = randomize();
+				martix_color_memory_manipulator(offset_x, i, 0, true);
 				cout_matrix();
-				Sleep(40);
+				Sleep(30);
 				//system("pause");
 				system("cls");
+				is_end = false;
 			}
+			offset_y++;
+
+			for (int i = offset_y; i < matrix_order - offset_y + 1; i++)
+			{
+				matrix[i][matrix_order - offset_y] = randomize();
+				martix_color_memory_manipulator(i, matrix_order - offset_y, 0, true);
+				cout_matrix();
+				Sleep(30);
+				//system("pause");
+				system("cls");
+				is_end = false;
+			}
+			offset_x++;
+
+
+			for (int i = matrix_order - offset_x - 1; i > offset_x - 2; i--)
+			{
+				matrix[matrix_order - offset_x][i] = randomize();
+				martix_color_memory_manipulator(matrix_order - offset_x, i, 0, true);
+				cout_matrix();
+				Sleep(30);
+				//system("pause");
+				system("cls");
+				is_end = false;
+			}
+			for (int i = matrix_order - offset_y - 1; i > offset_y - 1; i--)
+			{
+				matrix[i][offset_y - 1] = randomize();
+				martix_color_memory_manipulator(i, offset_y - 1, 0, true);
+				cout_matrix();
+				Sleep(30);
+				//system("pause");
+				system("cls");
+				is_end = false;
+			}
+
+			if (is_end)
+				break;
 		}
+
 		for (int y = 0; y < CLRM_last_SIZE; y++)
 		{
 			martix_color_memory_manipulator(0, 0, 1, true);
-			//system("cls");
 			cout_matrix();
-			Sleep(40);
+			Sleep(30);
 			//system("pause");
 			if(y != CLRM_last_SIZE - 1)
+				system("cls");
+		}
+	}
+	
+	void fill_matrix_wave() {
+		system("cls");
+		matrix_colors_reset_colors(0);
+
+		CLRM_destructor();
+		CLRM_constructor(4);
+
+		int offset_x = 0;
+		while (true)
+		{
+			for (int i = 0; i < matrix_order; i++)
+			{
+				matrix[i][offset_x] = randomize();
+				martix_color_memory_manipulator(i, offset_x, 0, true);
+				cout_matrix();
+				Sleep(30);
+				//system("pause");
+				system("cls");
+			}
+			offset_x++;
+
+			if (offset_x >= matrix_order)
+			{
+				break;
+			}
+
+			for (int i = matrix_order - 1; i >= 0; i--)
+			{
+				matrix[i][offset_x] = randomize();
+				martix_color_memory_manipulator(i, offset_x, 0, true);
+				cout_matrix();
+				Sleep(30);
+				//system("pause");
+				system("cls");
+			}
+			offset_x++;
+
+			if (offset_x >= matrix_order)
+			{
+				break;
+			}
+		}
+
+		for (int i = 0; i < CLRM_last_SIZE; i++)
+		{
+			martix_color_memory_manipulator(0, 0, 1, true);
+			cout_matrix();
+			Sleep(30);
+			//system("pause");
+			if (i != CLRM_last_SIZE - 1)
 				system("cls");
 		}
 	}
@@ -148,9 +250,10 @@ private:
 	int matrix_order;
 
 	//CLR MEMORY
-	//INDEX 0 - post-previous
-	//INDEX 1 - previous
-	//INDEX 2 - current
+	//INDEX <MAX-3 - tail
+	//INDEX =MAX-2 - post-previous
+	//INDEX =MAX-1 - previous
+	//INDEX =MAX   - current
 	short CLRM_last_SIZE;
 	short CLRM_last_total_count_erased;
 	short* CLRM_last_ROW;
@@ -168,7 +271,7 @@ private:
 				srand(seed);
 		}
 
-		rand_value = rand() % 10;//(matrix_order * matrix_order);
+		rand_value = rand() % (matrix_order * matrix_order); // 10;//
 		if (rand_value != 0)
 			return rand_value;
 		else
@@ -179,37 +282,51 @@ private:
 		matrix_colors[coord_Y][coord_X] = c_text;
 	}
 
-	void CLRM_constructor() {
-		if (CLRM_last_ROW == nullptr)
-			CLRM_last_ROW = new short[CLRM_last_SIZE] {};
+	bool CLRM_constructor(int tail_length) {
+		if (CLRM_last_COL != nullptr)
+			CLRM_destructor();
+
+		CLRM_last_SIZE = tail_length;
+
+		CLRM_last_ROW = new short[CLRM_last_SIZE] {};
 		
-		if (CLRM_last_COL == nullptr)
-			CLRM_last_COL = new short[CLRM_last_SIZE] {};
+		CLRM_last_COL = new short[CLRM_last_SIZE] {};
 
-		if (CLRM_last_CLR == nullptr) {
-			CLRM_last_CLR = new short[CLRM_last_SIZE] {};
-			for (int i = 0; i < CLRM_last_SIZE; i++)
-			{
-				CLRM_last_CLR[i] = matrix_colors[0][0];
-			}
+		CLRM_last_CLR = new short[CLRM_last_SIZE] {};
+		CLRM_last_CLR_before = new short[CLRM_last_SIZE] {};
+		for (int i = 0; i < CLRM_last_SIZE; i++)
+		{
+			CLRM_last_CLR_before[i] = matrix_colors[0][0];
+			CLRM_last_CLR[i] = matrix_colors[0][0];
 		}
 
-		if (CLRM_last_CLR_before == nullptr) {
-			CLRM_last_CLR_before = new short[CLRM_last_SIZE] {};
-			for (int i = 0; i < CLRM_last_SIZE; i++)
-			{
-				CLRM_last_CLR_before[i] = matrix_colors[0][0];
-			}
-		}
+		return true;
 	}
+	
+	bool CLRM_destructor() {
+		if (CLRM_last_COL == nullptr)
+			return 0;
 
+		CLRM_last_SIZE = 4;
+
+		delete[] CLRM_last_ROW;
+		delete[] CLRM_last_COL;
+		delete[] CLRM_last_CLR;
+		delete[] CLRM_last_CLR_before;
+
+		CLRM_last_ROW = nullptr;
+		CLRM_last_COL = nullptr;
+		CLRM_last_CLR = nullptr;
+		CLRM_last_CLR_before = nullptr;
+
+		return true;
+	}
+	
 	//STATUS:
 	// 0 - add current (just changed)
 	// >=1 - there is no current item, continue for previously entered items one step further  <- default
 	void martix_color_memory_manipulator(unsigned int coord_ROW = 0, unsigned int coord_COL = 0, unsigned short status = 1, bool save_tail_effect = false, short CLR_current = 2, short CLR_previous = 6, short CLR_post_previous = 4, short CLR_tail = 15) {
 		bool CLR_is_changed = false;
-
-		CLRM_constructor(); //warning
 		
 		for (int i = 0; i < CLRM_last_SIZE; i++) {
 			if(save_tail_effect && i == 0)
@@ -229,25 +346,6 @@ private:
 				CLRM_last_COL[i] = CLRM_last_COL[i + 1];
 				CLRM_last_CLR[i] = CLRM_last_CLR[i + 1];
 				CLRM_last_CLR_before[i] = CLRM_last_CLR_before[i + 1];
-
-				/*switch (CLRM_last_CLR[i])
-				{
-				case 2:
-					CLRM_last_CLR[i] = CLR_previous;
-					break;
-				case 6:
-					CLRM_last_CLR[i] = CLR_post_previous;
-					break;
-				case 4:
-					CLRM_last_CLR[i] = CLR_tail;
-					break;
-				case 12:
-
-					break;
-				default:
-					CLRM_last_CLR[i] = CLRM_last_CLR_before[i];
-					break;
-				}*/
 
 				if (CLRM_last_CLR[i] == CLR_current && !CLR_is_changed) {
 					CLRM_last_CLR[i] = CLR_previous;
@@ -355,7 +453,7 @@ private:
 };
 
 /*
-1)    Используя арифметику указателей, заполняет квадратичную целочисленную матрицу порядка N (6, 8, 10) случайными числами от 1 до  N * N согласно схемам приведенным на рисунках.
+1)    Используя !! арифметику указателей, заполняет квадратичную целочисленную матрицу порядка N (6, 8, 10) случайными числами от 1 до  N * N согласно схемам приведенным на рисунках.
 	  Пользователь должен видеть процесс заполнения квадратичной матрицы.
 
 2)    Получает новую матрицу, из матрицы п. 1, переставляя ее блоки в соответствии со схемами :

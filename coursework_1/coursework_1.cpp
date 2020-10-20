@@ -51,9 +51,12 @@ int main()
     
     AdvancedSquareMatrix obj;
 
-    obj.matrix_constructor_interface(9);
+    obj.matrix_constructor_interface(3);
     //obj.cout_matrix();
-    obj.fill_matrix_snail();
+    //obj.fill_matrix_snail();
+    cout << endl;
+    cout << endl;
+    obj.fill_matrix_wave();
     cout << endl;
     cout << endl;
     //system("pause");
