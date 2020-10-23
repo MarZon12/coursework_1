@@ -10,11 +10,6 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-int compare(const void* x1, const void* x2)   // функция сравнения элементов массива
-{
-    return (*(int*)x1 - *(int*)x2);           // если результат вычитания равен 0, то числа равны, < 0: x1 < x2; > 0: x1 > x2
-}
-
 /*
     Black = 0,
     Blue = 1,
@@ -40,7 +35,6 @@ void SetOutputColor(int text = 15, int bg = 0) {
 }
 
 
-
 int main()
 {
     setlocale(0, "RU");
@@ -48,38 +42,11 @@ int main()
 
     bool is_cout = 1;
     int value = 0;
-    
-    AdvancedSquareMatrix obj;
 
-    obj.matrix_constructor_interface(3);
-    //obj.cout_matrix();
-    //obj.fill_matrix_snail();
-    cout << endl;
-    cout << endl;
-    obj.fill_matrix_wave();
-    cout << endl;
-    cout << endl;
+
+
     //system("pause");
-    //obj.matrix_constructor_interface(20);
-    //obj.cout_matrix();
-
 }
-
-/*
-cout << "Average min and max: " << object.average_min_and_max() << endl;
-
-
-
-
-
-
-*/
-
-
-
-
-
-
 
 
 /*
