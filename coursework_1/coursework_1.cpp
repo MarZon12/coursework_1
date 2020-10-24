@@ -5,6 +5,7 @@
 #include "BinaryRepresentation.h"
 #include "OneDimensionalStaticIntArray.h"
 #include "AdvancedSquareMatrix.h"
+#include "SentenceEditor.h"
 
 using std::cout;
 using std::cin;
@@ -43,7 +44,9 @@ int main()
     bool is_cout = 1;
     int value = 0;
 
+    SentenceEditor obj;
 
+    obj.sentence_reader();
 
     //system("pause");
 }
