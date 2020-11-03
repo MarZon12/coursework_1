@@ -5,7 +5,7 @@
 #include "BinaryRepresentation.h"
 #include "OneDimensionalStaticIntArray.h"
 #include "AdvancedSquareMatrix.h"
-#include "SentenceEditor.h"
+#include "StringEditor.h"
 
 using std::cout;
 using std::cin;
@@ -35,18 +35,240 @@ void SetOutputColor(int text = 15, int bg = 0) {
     SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
 }
 
+// WARNING: FIX return;
 
 int main()
 {
     setlocale(0, "RU");
     system("color 0F");
 
+    // 1234567890123456789012345
+
     bool is_cout = 1;
     int value = 0;
+    char ch;
+    //cin >> ch;
 
-    SentenceEditor obj;
+    /*Beep(659, 150);
+    Sleep(50);
+    Beep(659, 150);
+    Sleep(100);
+    Beep(659, 200);
+    Sleep(100);
+    Beep(523, 130);
+    Beep(659, 150);
+    Sleep(200);
+    Beep(790, 300);
+    Sleep(400);
+    Beep(391, 500);*/
 
-    obj.sentence_reader();
+    /*Beep(1480, 200);
+    Beep(1568, 200);
+    Beep(1568, 200);
+    Beep(1568, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(369.99, 200);
+    Beep(392, 200);
+    Beep(369.99, 200);
+    Beep(392, 200);
+    Beep(392, 400);
+    Beep(196, 400);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(880, 200);
+    Beep(830.61, 200);
+    Beep(880, 200);
+    Beep(987.77, 400);
+    Beep(880, 200);
+    Beep(783.99, 200);
+    Beep(698.46, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(880, 200);
+    Beep(830.61, 200);
+    Beep(880, 200);
+    Beep(987.77, 400);
+    Sleep(200);
+    Beep(1108, 10);
+    Beep(1174.7, 200);
+    Beep(1480, 10);
+    Beep(1568, 200);
+    Sleep(200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(783.99, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(880, 200);
+    Beep(830.61, 200);
+    Beep(880, 200);
+    Beep(987.77, 400);
+    Beep(880, 200);
+    Beep(783.99, 200);
+    Beep(698.46, 200);
+    Beep(659.25, 200);
+    Beep(698.46, 200);
+    Beep(784, 200);
+    Beep(880, 400);
+    Beep(784, 200);
+    Beep(698.46, 200);
+    Beep(659.25, 200);
+    Beep(587.33, 200);
+    Beep(659.25, 200);
+    Beep(698.46, 200);
+    Beep(784, 400);
+    Beep(698.46, 200);
+    Beep(659.25, 200);
+    Beep(587.33, 200);
+    Beep(523.25, 200);
+    Beep(587.33, 200);
+    Beep(659.25, 200);
+    Beep(698.46, 400);
+    Beep(659.25, 200);
+    Beep(587.33, 200);
+    Beep(493.88, 200);
+    Beep(523.25, 200);
+    Sleep(400);
+    Beep(349.23, 400);
+    Beep(392, 200);
+    Beep(329.63, 200);
+    Beep(523.25, 200);
+    Beep(493.88, 200);
+    Beep(466.16, 200);
+    Beep(440, 200);
+    Beep(493.88, 200);
+    Beep(523.25, 200);
+    Beep(880, 200);
+    Beep(493.88, 200);
+    Beep(880, 200);
+    Beep(1760, 200);
+    Beep(440, 200);
+    Beep(392, 200);
+    Beep(440, 200);
+    Beep(493.88, 200);
+    Beep(783.99, 200);
+    Beep(440, 200);
+    Beep(783.99, 200);
+    Beep(1568, 200);
+    Beep(392, 200);
+    Beep(349.23, 200);
+    Beep(392, 200);
+    Beep(440, 200);
+    Beep(698.46, 200);
+    Beep(415.2, 200);
+    Beep(698.46, 200);
+    Beep(1396.92, 200);
+    Beep(349.23, 200);
+    Beep(329.63, 200);
+    Beep(311.13, 200);
+    Beep(329.63, 200);
+    Beep(659.25, 200);
+    Beep(698.46, 400);
+    Beep(783.99, 400);
+    Beep(440, 200);
+    Beep(493.88, 200);
+    Beep(523.25, 200);
+    Beep(880, 200);
+    Beep(493.88, 200);
+    Beep(880, 200);
+    Beep(1760, 200);
+    Beep(440, 200);
+    Beep(392, 200);
+    Beep(440, 200);
+    Beep(493.88, 200);
+    Beep(783.99, 200);
+    Beep(440, 200);
+    Beep(783.99, 200);
+    Beep(1568, 200);
+    Beep(392, 200);
+    Beep(349.23, 200);
+    Beep(392, 200);
+    Beep(440, 200);
+    Beep(698.46, 200);
+    Beep(659.25, 200);
+    Beep(698.46, 200);
+    Beep(739.99, 200);
+    Beep(783.99, 200);
+    Beep(392, 200);
+    Beep(392, 200);
+    Beep(392, 200);
+    Beep(392, 200);
+    Beep(196, 200);
+    Beep(196, 200);
+    Beep(196, 200);
+    Beep(185, 200);
+    Beep(196, 200);
+    Beep(185, 200);
+    Beep(196, 200);
+    Beep(207.65, 200);
+    Beep(220, 200);
+    Beep(233.08, 200);
+    Beep(246.94, 200);*/
+
+    /*Beep(247, 500);
+    Beep(417, 500);
+    Beep(417, 500);
+    Beep(370, 500);
+    Beep(417, 500);
+    Beep(329, 500);
+    Beep(247, 500);
+    Beep(247, 500);
+    Beep(247, 500);
+    Beep(417, 500);
+    Beep(417, 500);
+    Beep(370, 500);
+    Beep(417, 500);
+    Beep(497, 500);
+    Sleep(500);
+    Beep(497, 500);
+    Beep(277, 500);
+    Beep(277, 500);
+    Beep(440, 500);
+    Beep(440, 500);
+    Beep(417, 500);
+    Beep(370, 500);
+    Beep(329, 500);
+    Beep(247, 500);
+    Beep(417, 500);
+    Beep(417, 500);
+    Beep(370, 500);
+    Beep(417, 500);
+    Beep(329, 500);*/
+
+    StringEditor obj;
+    obj.read(2, "  toDay   we wILl test THIS program for eRRoRs    , ,,,  ,, ,    it Is possible   tHAt   (they)   exISt .. .. ..   tOfaO    . a  000000075   ...   3448,, 4487  ..  мда    .... ");
+    obj.edit_remove_extra_spaces();
+    obj.cout_string();
+
+    obj.edit_uppercase_lowercase_letters();
+    obj.cout_string();
+
+    obj.edit_remove_duplicate_punctuation_marks();
+    obj.cout_string();
+    //cout << char(7); // WARNING SOUND
+
+    for (int i = 0; i <= -255; i++)
+    {
+        cout << i << char(7) << '\t' << static_cast<char>(i) << endl;
+    }
 
     //system("pause");
 }

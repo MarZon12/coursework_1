@@ -27,7 +27,7 @@
     <ClCompile Include="AdvancedSquareMatrix.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="SentenceEditor.cpp">
+    <ClCompile Include="StringEditor.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClInclude Include="AdvancedSquareMatrix.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SentenceEditor.h">
+    <ClInclude Include="StringEditor.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -149,13 +149,13 @@
     <ClCompile Include="coursework_1.cpp" />
     <ClCompile Include="BinaryRepresentation.cpp" />
     <ClCompile Include="OneDimensionalStaticIntArray.cpp" />
-    <ClCompile Include="SentenceEditor.cpp" />
+    <ClCompile Include="StringEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdvancedSquareMatrix.h" />
     <ClInclude Include="BinaryRepresentation.h" />
     <ClInclude Include="OneDimensionalStaticIntArray.h" />
-    <ClInclude Include="SentenceEditor.h" />
+    <ClInclude Include="StringEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
