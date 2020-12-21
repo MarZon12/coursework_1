@@ -1,101 +1,82 @@
 #include "AdvancedSquareMatrix.h"
 
 AdvancedSquareMatrix::AdvancedSquareMatrix() {
-	matrix = nullptr;
-	matrix_colors = nullptr;
-	matrix_order = 0;
+	pMatrix = nullptr;
+	pMatrixColors = nullptr;
+	matrixOrder = 0;
 
-	CLRM_last_SIZE = 4;
-	CLRM_last_total_count_erased = 0;
-	CLRM_last_ROW = nullptr;
-	CLRM_last_COL = nullptr;
-	CLRM_last_CLR = nullptr;
-	CLRM_last_CLR_before = nullptr;
+	CLRM_bufferSize = 4;
+	CLRM_bufferTotalCountErased = 0;
+	pCLRM_bufferRow = nullptr;
+	pCLRM_bufferCol = nullptr;
+	pCLRM_bufferCLR = nullptr;
+	pCLRM_bufferCLR_before = nullptr;
 };
 AdvancedSquareMatrix::~AdvancedSquareMatrix() {
-	//matrix destructor
-	if (matrix != nullptr)
+	//pMatrix destructor
+	if (pMatrix != nullptr)
 	{
-		for (int i = 0; i < matrix_order; i++)
-			delete[] matrix[i];
-		delete[] matrix;
+		for (int i = 0; i < matrixOrder; i++)
+			delete[] pMatrix[i];
+		delete[] pMatrix;
 	}
 
-	//matrix_colors destructor
-	if (matrix_colors != nullptr)
+	//pMatrixColors destructor
+	if (pMatrixColors != nullptr)
 	{
-		for (int i = 0; i < matrix_order; i++)
-			delete[] matrix_colors[i];
-		delete[] matrix_colors;
+		for (int i = 0; i < matrixOrder; i++)
+			delete[] pMatrixColors[i];
+		delete[] pMatrixColors;
 	}
 
 	//CLRM destructor
-	if (CLRM_last_ROW != nullptr)
-		delete[] CLRM_last_ROW;
+	if (pCLRM_bufferRow != nullptr)
+		delete[] pCLRM_bufferRow;
 
-	if (CLRM_last_COL != nullptr)
-		delete[] CLRM_last_COL;
+	if (pCLRM_bufferCol != nullptr)
+		delete[] pCLRM_bufferCol;
 
-	if (CLRM_last_CLR != nullptr)
-		delete[] CLRM_last_CLR;
+	if (pCLRM_bufferCLR != nullptr)
+		delete[] pCLRM_bufferCLR;
 
-	if (CLRM_last_CLR_before != nullptr)
-		delete[] CLRM_last_CLR_before;
+	if (pCLRM_bufferCLR_before != nullptr)
+		delete[] pCLRM_bufferCLR_before;
 };
 
 //  +=====================================+
 //  |               PUBLIC                |
 //  +=====================================+
 
-void AdvancedSquareMatrix::constructor_interface(int matrix_order) {
-	//matrix destructor
-	if (matrix != nullptr)
+void AdvancedSquareMatrix::create(int matrixOrder) {
+	//pMatrix destructor
+	if (pMatrix != nullptr)
 	{
-		for (int i = 0; i < this->matrix_order; i++)
-			delete[] matrix[i];
-		delete[] matrix;
+		for (int i = 0; i < this->matrixOrder; i++)
+			delete[] pMatrix[i];
+		delete[] pMatrix;
 	}
 
-	//matrix_colors destructor
-	if (matrix_colors != nullptr)
+	//pMatrixColors destructor
+	if (pMatrixColors != nullptr)
 	{
-		for (int i = 0; i < this->matrix_order; i++)
-			delete[] matrix_colors[i];
-		delete[] matrix_colors;
+		for (int i = 0; i < this->matrixOrder; i++)
+			delete[] pMatrixColors[i];
+		delete[] pMatrixColors;
 	}
 
-	this->matrix_order = matrix_order;
+	this->matrixOrder = matrixOrder;
 
-	matrix_constructor();
-	matrix_colors_constructor();
+	matrixConstructor();
+	matrixColorsConstructor();
 };
 
-void AdvancedSquareMatrix::cout_matrix() {
-
-	/*for (size_t i = 0; i < matrix_order; i++)
+void AdvancedSquareMatrix::coutMatrix() {
+	for (int ROW = 0; ROW < matrixOrder; ROW++)
 	{
-		matrix_color_manipulator(i, i, 2);
-		matrix_color_manipulator(i, matrix_order - 1 - i, 1);
-		matrix_color_manipulator(matrix_order/2, i, 4);
-		matrix_color_manipulator(i, matrix_order / 2, 3);
-
-		if (i > 1 && i < matrix_order - 2 && i != matrix_order / 2 - 1 && i != matrix_order / 2 + 1 && i != matrix_order / 2)
+		for (int COL = 0; COL < matrixOrder; COL++)
 		{
-			matrix_color_manipulator(0, i, 6);
-			matrix_color_manipulator(matrix_order-1, i, 6);
-			matrix_color_manipulator(i, 0, 6);
-			matrix_color_manipulator(i, matrix_order - 1, 6);
-		}
-
-	}
-	matrix_color_manipulator(matrix_order / 2, matrix_order / 2, 6);*/
-
-	for (int ROW = 0; ROW < matrix_order; ROW++)
-	{
-		for (int COL = 0; COL < matrix_order; COL++)
-		{
-			SetOutputColor(matrix_colors[ROW][COL]);
-			cout << matrix[ROW][COL] << '\t';
+			SetOutputColor(pMatrixColors[ROW][COL]);
+			cout << pMatrix[ROW][COL] << '\t';
 			SetOutputColor();
 		}
 		cout << endl << endl << endl;
@@ -103,17 +84,17 @@ void AdvancedSquareMatrix::cout_matrix() {
 };
 
 
-void AdvancedSquareMatrix::comb_sort()
+void AdvancedSquareMatrix::performCombSort()
 {
 	double factor = 1.2473309;
-	double step_sort = static_cast<double>(matrix_order * matrix_order - 1);
+	double step_sort = static_cast<double>(matrixOrder * matrixOrder - 1);
 
 	while (step_sort >= 1)
 	{
-		for (int i = 0; i + step_sort < matrix_order * matrix_order; i++)
+		for (int i = 0; i + step_sort < matrixOrder * matrixOrder; i++)
 		{
-			if (matrix[i / matrix_order][i % matrix_order] > matrix[(i + static_cast<int>(step_sort)) / matrix_order][(i + static_cast<int>(step_sort)) % matrix_order])
-				swap_matrix_cells(i / matrix_order, i % matrix_order, (i + static_cast<int>(step_sort)) / matrix_order, (i + static_cast<int>(step_sort)) % matrix_order);
+			if (pMatrix[i / matrixOrder][i % matrixOrder] > pMatrix[(i + static_cast<int>(step_sort)) / matrixOrder][(i + static_cast<int>(step_sort)) % matrixOrder])
+				swapMatrixCells(i / matrixOrder, i % matrixOrder, (i + static_cast<int>(step_sort)) / matrixOrder, (i + static_cast<int>(step_sort)) % matrixOrder);
 		}
 		step_sort /= factor;
 	}
@@ -123,11 +104,11 @@ void AdvancedSquareMatrix::comb_sort()
 	do
 	{
 		sort_or_not = true;
-		for (int y = 0; y < matrix_order * matrix_order - 1 - i; y++)
+		for (int y = 0; y < matrixOrder * matrixOrder - 1 - i; y++)
 		{
-			if (matrix[y / matrix_order][y % matrix_order] > matrix[(y + static_cast<int>(step_sort)) / matrix_order][(y + static_cast<int>(step_sort)) % matrix_order])
+			if (pMatrix[y / matrixOrder][y % matrixOrder] > pMatrix[(y + static_cast<int>(step_sort)) / matrixOrder][(y + static_cast<int>(step_sort)) % matrixOrder])
 			{
-				swap_matrix_cells(y / matrix_order, y % matrix_order, (y + static_cast<int>(step_sort)) / matrix_order, (y + static_cast<int>(step_sort)) % matrix_order);
+				swapMatrixCells(y / matrixOrder, y % matrixOrder, (y + static_cast<int>(step_sort)) / matrixOrder, (y + static_cast<int>(step_sort)) % matrixOrder);
 				sort_or_not = false;
 			}
 		}
@@ -135,24 +116,24 @@ void AdvancedSquareMatrix::comb_sort()
 	} while (sort_or_not == false);
 }
 
-void AdvancedSquareMatrix::matrix_math(short math_mode, int value) {
-	for (int ROW = 0; ROW < matrix_order; ROW++)
+void AdvancedSquareMatrix::matrixMath(short mathMode, int value) {
+	for (int ROW = 0; ROW < matrixOrder; ROW++)
 	{
-		for (int COL = 0; COL < matrix_order; COL++)
+		for (int COL = 0; COL < matrixOrder; COL++)
 		{
-			switch (math_mode)
+			switch (mathMode)
 			{
 			case 0:
-				matrix[ROW][COL] += value;
+				pMatrix[ROW][COL] += value;
 				break;
 			case 1:
-				matrix[ROW][COL] -= value;
+				pMatrix[ROW][COL] -= value;
 				break;
 			case 2:
-				matrix[ROW][COL] *= value;
+				pMatrix[ROW][COL] *= value;
 				break;
 			case 3:
-				matrix[ROW][COL] /= value;
+				pMatrix[ROW][COL] /= value;
 				break;
 			default:
 				break;
@@ -161,30 +142,30 @@ void AdvancedSquareMatrix::matrix_math(short math_mode, int value) {
 	}
 }
 
-bool AdvancedSquareMatrix::swap_quarters(short swap_mode) {
-	if (matrix_order % 2 != 0)
+bool AdvancedSquareMatrix::swapQuarters(short swapMode) {
+	if (matrixOrder % 2 != 0)
 	{
 		cout << endl << endl
-			<< "\t+====================================================================+" << endl
-			<< "\t|Attention! The order of the matrix is odd! Swapping is not possible.|" << endl
-			<< "\t+====================================================================+" << endl << endl;
+			<< "\t+=====================================================================+\n"
+			<< "\t|Attention! The order of the pMatrix is odd! Swapping is not possible.|\n"
+			<< "\t+=====================================================================+\n" << endl;
 		return false;
 	}
 
-	int middle = matrix_order / 2;
+	int middle = matrixOrder / 2;
 
-	switch (swap_mode)
+	switch (swapMode)
 	{
 	case 0:
 		for (int ROW = 0; ROW < middle; ROW++)
 		{
 			for (int COL = 0; COL < middle; COL++)
 			{
-				swap_matrix_cells(ROW, COL, ROW, middle + COL);
+				swapMatrixCells(ROW, COL, ROW, middle + COL);
 
-				swap_matrix_cells(ROW, COL, middle + ROW, middle + COL);
+				swapMatrixCells(ROW, COL, middle + ROW, middle + COL);
 
-				swap_matrix_cells(ROW, COL, middle + ROW, COL);
+				swapMatrixCells(ROW, COL, middle + ROW, COL);
 			}
 		}
 		break;
@@ -193,37 +174,37 @@ bool AdvancedSquareMatrix::swap_quarters(short swap_mode) {
 		for (int ROW = 0; ROW < middle; ROW++)
 		{
 			for (int COL = 0; COL < middle; COL++)
-				swap_matrix_cells(ROW, COL, middle + ROW, middle + COL);
+				swapMatrixCells(ROW, COL, middle + ROW, middle + COL);
 		}
 
-		for (int ROW = middle; ROW < matrix_order; ROW++)
+		for (int ROW = middle; ROW < matrixOrder; ROW++)
 		{
 			for (int COL = 0; COL < middle; COL++)
-				swap_matrix_cells(ROW, COL, ROW - middle, COL + middle);
+				swapMatrixCells(ROW, COL, ROW - middle, COL + middle);
 		}
 		break;
 
 	case 2:
 		for (int ROW = 0; ROW < middle; ROW++)
 		{
-			for (int COL = 0; COL < matrix_order; COL++)
-				swap_matrix_cells(ROW, COL, middle + ROW, COL);
+			for (int COL = 0; COL < matrixOrder; COL++)
+				swapMatrixCells(ROW, COL, middle + ROW, COL);
 		}
 		break;
 
 	case 3:
-		for (int ROW = 0; ROW < matrix_order; ROW++)
+		for (int ROW = 0; ROW < matrixOrder; ROW++)
 		{
 			for (int COL = 0; COL < middle; COL++)
-				swap_matrix_cells(ROW, COL, ROW, middle + COL);
+				swapMatrixCells(ROW, COL, ROW, middle + COL);
 		}
 		break;
 
 	default:
 		cout << endl << endl
-			<< "\t+==================================================================+" << endl
-			<< "\t|         Attention! The entered swap mode does not exist.         |" << endl
-			<< "\t+==================================================================+" << endl << endl;
+			<< "\t+==================================================================+\n"
+			<< "\t|         Attention! The entered swap mode does not exist.         |\n"
+			<< "\t+==================================================================+\n" << endl;
 		return false;
 		break;
 	}
@@ -236,203 +217,201 @@ bool AdvancedSquareMatrix::swap_quarters(short swap_mode) {
 ///                FILL                 ///
 ///*************************************///
 
-void AdvancedSquareMatrix::fill_snail(int tail_length, bool save_tail_effect, short CLR_current, short CLR_previous, short CLR_post_previous, short CLR_tail) {
-	int offset_x = 0;
-	int offset_y = 0;
-	bool is_end = false;
+void AdvancedSquareMatrix::fillSnail(int tailLength, bool saveTailEffect, short CLR_current, short CLR_previous, short CLR_postPrevious, short CLR_tail) {
+	int offsetX = 0;
+	int offsetY = 0;
+	bool isEnd = false;
 
 	system("cls");
 
-	matrix_colors_reset(0);
-	matrix_value_reset(0);
+	resetMatrixColors(0);
+	resetMatrixValue(0);
 
 	srand(time(NULL));
 
-	CLRM_constructor(tail_length);
+	CLRM_constructor(tailLength);
 
 	while (true)
 	{
-		is_end = true;
-		for (int COL = offset_x; COL < matrix_order - offset_x; COL++)
+		isEnd = true;
+		for (int COL = offsetX; COL < matrixOrder - offsetX; COL++)
 		{
-			matrix[offset_x][COL] = rand() % (matrix_order * matrix_order) + 1;
-			CLRM_manipulator(offset_x, COL, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-			cout_matrix();
+			pMatrix[offsetX][COL] = rand() % (matrixOrder * matrixOrder) + 1;
+			CLRM_manipulator(offsetX, COL, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+			coutMatrix();
 			Sleep(30);
 			//system("pause");
 			system("cls");
-			is_end = false;
+			isEnd = false;
 		}
-		offset_y++;
+		offsetY++;
 
-		for (int ROW = offset_y; ROW < matrix_order - offset_y + 1; ROW++)
+		for (int ROW = offsetY; ROW < matrixOrder - offsetY + 1; ROW++)
 		{
-			matrix[ROW][matrix_order - offset_y] = rand() % (matrix_order * matrix_order) + 1;
-			CLRM_manipulator(ROW, matrix_order - offset_y, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-			cout_matrix();
+			pMatrix[ROW][matrixOrder - offsetY] = rand() % (matrixOrder * matrixOrder) + 1;
+			CLRM_manipulator(ROW, matrixOrder - offsetY, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+			coutMatrix();
 			Sleep(30);
 			//system("pause");
 			system("cls");
-			is_end = false;
+			isEnd = false;
 		}
-		offset_x++;
+		offsetX++;
 
 
-		for (int COL = matrix_order - offset_x - 1; COL > offset_x - 2; COL--)
+		for (int COL = matrixOrder - offsetX - 1; COL > offsetX - 2; COL--)
 		{
-			matrix[matrix_order - offset_x][COL] = rand() % (matrix_order * matrix_order) + 1;
-			CLRM_manipulator(matrix_order - offset_x, COL, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-			cout_matrix();
+			pMatrix[matrixOrder - offsetX][COL] = rand() % (matrixOrder * matrixOrder) + 1;
+			CLRM_manipulator(matrixOrder - offsetX, COL, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+			coutMatrix();
 			Sleep(30);
 			//system("pause");
 			system("cls");
-			is_end = false;
+			isEnd = false;
 		}
 
-		for (int ROW = matrix_order - offset_y - 1; ROW > offset_y - 1; ROW--)
+		for (int ROW = matrixOrder - offsetY - 1; ROW > offsetY - 1; ROW--)
 		{
-			matrix[ROW][offset_y - 1] = rand() % (matrix_order * matrix_order) + 1;
-			CLRM_manipulator(ROW, offset_y - 1, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-			cout_matrix();
+			pMatrix[ROW][offsetY - 1] = rand() % (matrixOrder * matrixOrder) + 1;
+			CLRM_manipulator(ROW, offsetY - 1, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+			coutMatrix();
 			Sleep(30);
 			//system("pause");
 			system("cls");
-			is_end = false;
+			isEnd = false;
 		}
 
-		if (is_end)
+		if (isEnd)
 			break;
 	}
 
-	for (int y = 0; y < CLRM_last_SIZE; y++)
+	for (int y = 0; y < CLRM_bufferSize; y++)
 	{
-		CLRM_manipulator(0, 0, 1, save_tail_effect);
-		cout_matrix();
+		CLRM_manipulator(0, 0, 1, saveTailEffect);
+		coutMatrix();
 		Sleep(30);
 		//system("pause");
-		if (y != CLRM_last_SIZE - 1)
+		if (y != CLRM_bufferSize - 1)
 			system("cls");
 	}
 }
 
-void AdvancedSquareMatrix::fill_wave(int tail_length, bool save_tail_effect, short CLR_current, short CLR_previous, short CLR_post_previous, short CLR_tail) {
-	int offset_x = 0;
+void AdvancedSquareMatrix::fillWave(int tailLength, bool saveTailEffect, short CLR_current, short CLR_previous, short CLR_postPrevious, short CLR_tail) {
+	int offsetX = 0;
 
 	system("cls");
 
-	matrix_colors_reset(0);
-	matrix_value_reset(0);
+	resetMatrixColors(0);
+	resetMatrixValue(0);
 
 	srand(time(NULL));
 
-	CLRM_constructor(tail_length);
+	CLRM_constructor(tailLength);
 
 	while (true)
 	{
-		for (int ROW = 0; ROW < matrix_order; ROW++)
+		for (int ROW = 0; ROW < matrixOrder; ROW++)
 		{
-			matrix[ROW][offset_x] = rand() % (matrix_order * matrix_order) + 1;
-			CLRM_manipulator(ROW, offset_x, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-			cout_matrix();
+			pMatrix[ROW][offsetX] = rand() % (matrixOrder * matrixOrder) + 1;
+			CLRM_manipulator(ROW, offsetX, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+			coutMatrix();
 			Sleep(30);
 			//system("pause");
 			system("cls");
 		}
-		offset_x++;
+		offsetX++;
 
-		if (offset_x >= matrix_order)
+		if (offsetX >= matrixOrder)
 		{
 			break;
 		}
 
-		for (int ROW = matrix_order - 1; ROW >= 0; ROW--)
+		for (int ROW = matrixOrder - 1; ROW >= 0; ROW--)
 		{
-			matrix[ROW][offset_x] = rand() % (matrix_order * matrix_order) + 1;
-			CLRM_manipulator(ROW, offset_x, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-			cout_matrix();
+			pMatrix[ROW][offsetX] = rand() % (matrixOrder * matrixOrder) + 1;
+			CLRM_manipulator(ROW, offsetX, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+			coutMatrix();
 			Sleep(30);
 			//system("pause");
 			system("cls");
 		}
-		offset_x++;
+		offsetX++;
 
-		if (offset_x >= matrix_order)
+		if (offsetX >= matrixOrder)
 		{
 			break;
 		}
 	}
 
-	for (int i = 0; i < CLRM_last_SIZE; i++)
+	for (int i = 0; i < CLRM_bufferSize; i++)
 	{
-		CLRM_manipulator(0, 0, 1, save_tail_effect);
-		cout_matrix();
+		CLRM_manipulator(0, 0, 1, saveTailEffect);
+		coutMatrix();
 		Sleep(30);
 		//system("pause");
-		if (i != CLRM_last_SIZE - 1)
+		if (i != CLRM_bufferSize - 1)
 			system("cls");
 	}
 }
 
-void AdvancedSquareMatrix::fill_rand(int tail_length, bool save_tail_effect, short CLR_current, short CLR_previous, short CLR_post_previous, short CLR_tail) {
+void AdvancedSquareMatrix::fillRand(int tailLength, bool saveTailEffect, short CLR_current, short CLR_previous, short CLR_postPrevious, short CLR_tail) {
 	int rand_1(0), rand_2(0);
-	bool is_true = true;
+	bool isTrue = true;
 
 	system("cls");
 
-	matrix_colors_reset(0);
-	matrix_value_reset(0);
+	resetMatrixColors(0);
+	resetMatrixValue(0);
 
 	srand(time(NULL));
 
-	CLRM_constructor(tail_length);
-
-	//srand(time(NULL));
+	CLRM_constructor(tailLength);
 
 	while (true)
 	{
-		is_true = false;
-		rand_1 = rand() % matrix_order;
-		rand_2 = rand() % matrix_order;
+		isTrue = false;
+		rand_1 = rand() % matrixOrder;
+		rand_2 = rand() % matrixOrder;
 
 		while (true)
 		{
-			if (matrix[rand_1][rand_2] == 0)
+			if (pMatrix[rand_1][rand_2] == 0)
 			{
-				matrix[rand_1][rand_2] = rand() % (matrix_order * matrix_order) + 1;
+				pMatrix[rand_1][rand_2] = rand() % (matrixOrder * matrixOrder) + 1;
 				break;
 			}
 			else {
-				rand_1 = rand() % matrix_order;
-				rand_2 = rand() % matrix_order;
+				rand_1 = rand() % matrixOrder;
+				rand_2 = rand() % matrixOrder;
 			}
 		}
-		CLRM_manipulator(rand_1, rand_2, 0, save_tail_effect, CLR_current, CLR_previous, CLR_post_previous, CLR_tail);
-		cout_matrix();
+		CLRM_manipulator(rand_1, rand_2, 0, saveTailEffect, CLR_current, CLR_previous, CLR_postPrevious, CLR_tail);
+		coutMatrix();
 		Sleep(30);
 		system("cls");
-		for (int ROW = 0; ROW < matrix_order; ROW++)
+		for (int ROW = 0; ROW < matrixOrder; ROW++)
 		{
-			for (int COL = 0; COL < matrix_order; COL++)
+			for (int COL = 0; COL < matrixOrder; COL++)
 			{
-				if (matrix[ROW][COL] == 0)
-					is_true = true;
+				if (pMatrix[ROW][COL] == 0)
+					isTrue = true;
 			}
 		}
 
-		if (is_true == false)
+		if (isTrue == false)
 		{
 			break;
 		}
 
 	}
 
-	for (int i = 0; i < CLRM_last_SIZE; i++)
+	for (int i = 0; i < CLRM_bufferSize; i++)
 	{
-		CLRM_manipulator(0, 0, 1, save_tail_effect);
-		cout_matrix();
+		CLRM_manipulator(0, 0, 1, saveTailEffect);
+		coutMatrix();
 		Sleep(30);
 		//system("pause");
-		if (i != CLRM_last_SIZE - 1)
+		if (i != CLRM_bufferSize - 1)
 			system("cls");
 	}
 
@@ -443,23 +422,23 @@ void AdvancedSquareMatrix::fill_rand(int tail_length, bool save_tail_effect, sho
 ///             INSTRUMENTS             ///
 ///*************************************///
 
-int** AdvancedSquareMatrix::get_matrix() {
-	return matrix;
+int** AdvancedSquareMatrix::getMatrixPointer() {
+	return pMatrix;
 }
 
-int AdvancedSquareMatrix::get_matrix_order() {
-	return matrix_order;
+int AdvancedSquareMatrix::getMatrixOrder() {
+	return matrixOrder;
 }
 
 void AdvancedSquareMatrix::operator=(AdvancedSquareMatrix& source) {
-	int** source_matrix = source.get_matrix();
-	constructor_interface(source.get_matrix_order());
+	int** sourceMatrix = source.getMatrixPointer();
+	create(source.getMatrixOrder());
 
-	for (int ROW = 0; ROW < matrix_order; ROW++)
+	for (int ROW = 0; ROW < matrixOrder; ROW++)
 	{
-		for (int COL = 0; COL < matrix_order; COL++)
+		for (int COL = 0; COL < matrixOrder; COL++)
 		{
-			this->matrix[ROW][COL] = source_matrix[ROW][COL];
+			this->pMatrix[ROW][COL] = sourceMatrix[ROW][COL];
 		}
 	}
 }
@@ -472,107 +451,107 @@ void AdvancedSquareMatrix::operator=(AdvancedSquareMatrix& source) {
 ///          CLRM [ColorMemory]         ///
 ///*************************************///
 
-void AdvancedSquareMatrix::CLRM_constructor(int tail_length) {
-	if (CLRM_last_COL != nullptr)
+void AdvancedSquareMatrix::CLRM_constructor(int tailLength) {
+	if (pCLRM_bufferCol != nullptr)
 		CLRM_destructor();
 
-	CLRM_last_SIZE = tail_length;
+	CLRM_bufferSize = tailLength;
 
-	CLRM_last_ROW = new short[CLRM_last_SIZE] {};
-	CLRM_last_COL = new short[CLRM_last_SIZE] {};
-	CLRM_last_CLR = new short[CLRM_last_SIZE] {};
-	CLRM_last_CLR_before = new short[CLRM_last_SIZE] {};
+	pCLRM_bufferRow = new short[CLRM_bufferSize] {};
+	pCLRM_bufferCol = new short[CLRM_bufferSize] {};
+	pCLRM_bufferCLR = new short[CLRM_bufferSize] {};
+	pCLRM_bufferCLR_before = new short[CLRM_bufferSize] {};
 
-	for (int i = 0; i < CLRM_last_SIZE; i++)
+	for (int i = 0; i < CLRM_bufferSize; i++)
 	{
-		CLRM_last_CLR[i] = matrix_colors[0][0];
-		CLRM_last_CLR_before[i] = matrix_colors[0][0];
+		pCLRM_bufferCLR[i] = pMatrixColors[0][0];
+		pCLRM_bufferCLR_before[i] = pMatrixColors[0][0];
 	}
 }
 
 bool AdvancedSquareMatrix::CLRM_destructor() {
-	if (CLRM_last_ROW == nullptr)
+	if (pCLRM_bufferRow == nullptr)
 		return false;
 
-	CLRM_last_SIZE = 4;
+	CLRM_bufferSize = 4;
 
-	delete[] CLRM_last_ROW;
-	delete[] CLRM_last_COL;
-	delete[] CLRM_last_CLR;
-	delete[] CLRM_last_CLR_before;
+	delete[] pCLRM_bufferRow;
+	delete[] pCLRM_bufferCol;
+	delete[] pCLRM_bufferCLR;
+	delete[] pCLRM_bufferCLR_before;
 
-	CLRM_last_ROW = nullptr;
-	CLRM_last_COL = nullptr;
-	CLRM_last_CLR = nullptr;
-	CLRM_last_CLR_before = nullptr;
+	pCLRM_bufferRow = nullptr;
+	pCLRM_bufferCol = nullptr;
+	pCLRM_bufferCLR = nullptr;
+	pCLRM_bufferCLR_before = nullptr;
 
 	return true;
 }
 
-void AdvancedSquareMatrix::CLRM_manipulator(unsigned int coord_ROW, unsigned int coord_COL, unsigned short status, bool save_tail_effect, short CLR_current, short CLR_previous, short CLR_post_previous, short CLR_tail) {
-	bool CLR_is_changed = false;
+void AdvancedSquareMatrix::CLRM_manipulator(unsigned int coordRow, unsigned int coordCol, unsigned short status, bool saveTailEffect, short CLR_current, short CLR_previous, short CLR_postPrevious, short CLR_tail) {
+	bool CLR_isChanged = false;
 
-	for (int i = 0; i < CLRM_last_SIZE; i++) {
-		if (save_tail_effect && i == 0)
-			matrix_colors[CLRM_last_ROW[i]][CLRM_last_COL[i]] = CLRM_last_CLR[i];
+	for (int i = 0; i < CLRM_bufferSize; i++) {
+		if (saveTailEffect && i == 0)
+			pMatrixColors[pCLRM_bufferRow[i]][pCLRM_bufferCol[i]] = pCLRM_bufferCLR[i];
 		else
-			matrix_colors[CLRM_last_ROW[i]][CLRM_last_COL[i]] = CLRM_last_CLR_before[i];
+			pMatrixColors[pCLRM_bufferRow[i]][pCLRM_bufferCol[i]] = pCLRM_bufferCLR_before[i];
 	}
 
 	switch (status)
 	{
 	case 0:
-		for (int i = 0; i < CLRM_last_SIZE - 1; i++)
+		for (int i = 0; i < CLRM_bufferSize - 1; i++)
 		{
-			CLR_is_changed = false;
+			CLR_isChanged = false;
 
-			CLRM_last_ROW[i] = CLRM_last_ROW[i + 1];
-			CLRM_last_COL[i] = CLRM_last_COL[i + 1];
-			CLRM_last_CLR[i] = CLRM_last_CLR[i + 1];
-			CLRM_last_CLR_before[i] = CLRM_last_CLR_before[i + 1];
+			pCLRM_bufferRow[i] = pCLRM_bufferRow[i + 1];
+			pCLRM_bufferCol[i] = pCLRM_bufferCol[i + 1];
+			pCLRM_bufferCLR[i] = pCLRM_bufferCLR[i + 1];
+			pCLRM_bufferCLR_before[i] = pCLRM_bufferCLR_before[i + 1];
 
-			if (CLRM_last_CLR[i] == CLR_current && !CLR_is_changed) {
-				CLRM_last_CLR[i] = CLR_previous;
-				CLR_is_changed = true;
+			if (pCLRM_bufferCLR[i] == CLR_current && !CLR_isChanged) {
+				pCLRM_bufferCLR[i] = CLR_previous;
+				CLR_isChanged = true;
 			}
 
-			if (CLRM_last_CLR[i] == CLR_previous && !CLR_is_changed) {
-				CLRM_last_CLR[i] = CLR_post_previous;
-				CLR_is_changed = true;
+			if (pCLRM_bufferCLR[i] == CLR_previous && !CLR_isChanged) {
+				pCLRM_bufferCLR[i] = CLR_postPrevious;
+				CLR_isChanged = true;
 			}
 
-			if (CLRM_last_CLR[i] == CLR_post_previous && !CLR_is_changed) {
-				CLRM_last_CLR[i] = CLR_tail;
-				CLR_is_changed = true;
+			if (pCLRM_bufferCLR[i] == CLR_postPrevious && !CLR_isChanged) {
+				pCLRM_bufferCLR[i] = CLR_tail;
+				CLR_isChanged = true;
 			}
 
-			matrix_colors[CLRM_last_ROW[i]][CLRM_last_COL[i]] = CLRM_last_CLR[i];
+			pMatrixColors[pCLRM_bufferRow[i]][pCLRM_bufferCol[i]] = pCLRM_bufferCLR[i];
 		}
 
-		CLRM_last_ROW[CLRM_last_SIZE - 1] = coord_ROW;
-		CLRM_last_COL[CLRM_last_SIZE - 1] = coord_COL;
-		CLRM_last_CLR[CLRM_last_SIZE - 1] = CLR_current;
-		CLRM_last_CLR_before[CLRM_last_SIZE - 1] = matrix_colors[coord_ROW][coord_COL];
-		matrix_colors[CLRM_last_ROW[CLRM_last_SIZE - 1]][CLRM_last_COL[CLRM_last_SIZE - 1]] = CLR_current;
+		pCLRM_bufferRow[CLRM_bufferSize - 1] = coordRow;
+		pCLRM_bufferCol[CLRM_bufferSize - 1] = coordCol;
+		pCLRM_bufferCLR[CLRM_bufferSize - 1] = CLR_current;
+		pCLRM_bufferCLR_before[CLRM_bufferSize - 1] = pMatrixColors[coordRow][coordCol];
+		pMatrixColors[pCLRM_bufferRow[CLRM_bufferSize - 1]][pCLRM_bufferCol[CLRM_bufferSize - 1]] = CLR_current;
 		break;
 
 	default:
-		for (int i = CLRM_last_SIZE - 1; i > 0; i--)
+		for (int i = CLRM_bufferSize - 1; i > 0; i--)
 		{
-			CLRM_last_CLR[i] = CLRM_last_CLR[i - 1];
-			CLRM_last_CLR_before[i] = CLRM_last_CLR_before[i - 1];
+			pCLRM_bufferCLR[i] = pCLRM_bufferCLR[i - 1];
+			pCLRM_bufferCLR_before[i] = pCLRM_bufferCLR_before[i - 1];
 
-			matrix_colors[CLRM_last_ROW[i]][CLRM_last_COL[i]] = CLRM_last_CLR[i];
+			pMatrixColors[pCLRM_bufferRow[i]][pCLRM_bufferCol[i]] = pCLRM_bufferCLR[i];
 		}
 
-		CLRM_last_ROW[CLRM_last_total_count_erased] = 0;
-		CLRM_last_COL[CLRM_last_total_count_erased] = 0;
-		CLRM_last_CLR[CLRM_last_total_count_erased] = matrix_colors[0][0];
-		CLRM_last_CLR_before[CLRM_last_total_count_erased] = matrix_colors[0][0];
-		CLRM_last_total_count_erased++;
+		pCLRM_bufferRow[CLRM_bufferTotalCountErased] = 0;
+		pCLRM_bufferCol[CLRM_bufferTotalCountErased] = 0;
+		pCLRM_bufferCLR[CLRM_bufferTotalCountErased] = pMatrixColors[0][0];
+		pCLRM_bufferCLR_before[CLRM_bufferTotalCountErased] = pMatrixColors[0][0];
+		CLRM_bufferTotalCountErased++;
 
-		if (CLRM_last_total_count_erased == CLRM_last_SIZE)
-			CLRM_last_total_count_erased = 0;
+		if (CLRM_bufferTotalCountErased == CLRM_bufferSize)
+			CLRM_bufferTotalCountErased = 0;
 		break;
 	}
 }
@@ -582,41 +561,41 @@ void AdvancedSquareMatrix::CLRM_manipulator(unsigned int coord_ROW, unsigned int
 ///             INSTRUMENTS             ///
 ///*************************************///
 
-void AdvancedSquareMatrix::matrix_constructor() {
-	matrix = new int* [matrix_order];
+void AdvancedSquareMatrix::matrixConstructor() {
+	pMatrix = new int* [matrixOrder];
 
-	for (int i = 0; i < matrix_order; i++)
-		matrix[i] = new int[matrix_order] {};
+	for (int i = 0; i < matrixOrder; i++)
+		pMatrix[i] = new int[matrixOrder] {};
 };
-void AdvancedSquareMatrix::matrix_colors_constructor(short default_color) {
-	matrix_colors = new short* [matrix_order];
+void AdvancedSquareMatrix::matrixColorsConstructor(short defaultColor) {
+	pMatrixColors = new short* [matrixOrder];
 	
-	for (int i = 0; i < matrix_order; i++)
-		matrix_colors[i] = new short[matrix_order];
+	for (int i = 0; i < matrixOrder; i++)
+		pMatrixColors[i] = new short[matrixOrder];
 
-	matrix_colors_reset(default_color);
+	resetMatrixColors(defaultColor);
 }
 
-void AdvancedSquareMatrix::matrix_value_reset(int default_value) {
-	for (int ROW = 0; ROW < matrix_order; ROW++)
+void AdvancedSquareMatrix::resetMatrixValue(int defaultValue) {
+	for (int ROW = 0; ROW < matrixOrder; ROW++)
 	{
-		for (int COL = 0; COL < matrix_order; COL++)
-			matrix[ROW][COL] = default_value;
+		for (int COL = 0; COL < matrixOrder; COL++)
+			pMatrix[ROW][COL] = defaultValue;
 	}
 }
-void AdvancedSquareMatrix::matrix_colors_reset(short default_color) {
-	for (int ROW = 0; ROW < matrix_order; ROW++)
+void AdvancedSquareMatrix::resetMatrixColors(short defaultColor) {
+	for (int ROW = 0; ROW < matrixOrder; ROW++)
 	{
-		for (int COL = 0; COL < matrix_order; COL++)
-			matrix_colors[ROW][COL] = default_color;
+		for (int COL = 0; COL < matrixOrder; COL++)
+			pMatrixColors[ROW][COL] = defaultColor;
 	}
 }
 
 
-void AdvancedSquareMatrix::swap_matrix_cells(int first_ROW, int first_COL, int second_ROW, int second_COL) {
-	int buffer = matrix[first_ROW][first_COL];
-	matrix[first_ROW][first_COL] = matrix[second_ROW][second_COL];
-	matrix[second_ROW][second_COL] = buffer;
+void AdvancedSquareMatrix::swapMatrixCells(int firstRow, int firstCol, int secondRow, int secondCol) {
+	int buffer = pMatrix[firstRow][firstCol];
+	pMatrix[firstRow][firstCol] = pMatrix[secondRow][secondCol];
+	pMatrix[secondRow][secondCol] = buffer;
 }
 
 void AdvancedSquareMatrix::SetOutputColor(int text, int bg) {

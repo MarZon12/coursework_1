@@ -1,75 +1,100 @@
 #include "BinaryRepresentation.h"
 
-void BinaryRepresentation::cout_weight_data_types() {
-	cout << "Объем памяти, занимаемой различными типами данных:" << endl;
+BinaryRepresentation::BinaryRepresentation() {
+    pBinResult = nullptr;
+    pDecResult = nullptr;
+    pDataType = nullptr;
+
+    binIsInitialized = false;
+    decIsInitialized = false;
+    colorsState = true;
+
+    dataTypeCode = 0;
+    sizeofDataTypeValue_x8 = 0;
+    exponentSize = 0;
+}
+BinaryRepresentation::~BinaryRepresentation() {
+    delete[] pBinResult;
+    delete[] pDecResult;
+    delete[] pDataType;
+}
+
+
+void BinaryRepresentation::coutWeightDataTypes() {
+	cout << "The amount of memory used by different data types:\n";
 	
-	cout << "int:         " << sizeof(int) << " byte" << endl
-		 << "short int:   " << sizeof(short) << " byte" << endl
-		 << "long int:    " << sizeof(long) << " byte" << endl
-		 << "float:       " << sizeof(float) << " byte" << endl
-		 << "double:      " << sizeof(double) << " byte" << endl
-		 << "long double: " << sizeof(long double) << " byte" << endl
-		 << "char:        " << sizeof(char) << " byte"  << endl
+	cout << "int:         " << sizeof(int) << " byte\n"
+		 << "short int:   " << sizeof(short) << " byte\n"
+		 << "long int:    " << sizeof(long) << " byte\n"
+		 << "float:       " << sizeof(float) << " byte\n"
+		 << "double:      " << sizeof(double) << " byte\n"
+		 << "long double: " << sizeof(long double) << " byte\n"
+		 << "char:        " << sizeof(char) << " byte\n"
 		 << "bool:        " << sizeof(bool) << " byte" << endl;
 }
 
-bool BinaryRepresentation::cout_binary_representation() {
-    if (!bin_is_initialized)
+bool BinaryRepresentation::coutBinRepresentation() {
+    if (!binIsInitialized)
     {
         cout << endl << endl 
-            << "\t+=========================================================+" << endl
-            << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-            << "\t+=========================================================+" << endl << endl;
+            << "\t+=========================================================+\n"
+            << "\t|Attention! You didn't convert a decimal number to binary!|\n"
+            << "\t+=========================================================+\n" << endl;
         return 0;
     }
 
 
-    cout << "Тип переменной: " << data_type << endl; //" code: " << data_type_code << endl; //WARNING
-    cout << "Значение: " << this->convert_bin_to_dec() << endl;
+    cout << "Variable type: " << pDataType << endl; //" code: " << dataTypeCode << endl; //WARNING
+    cout << "Value: ";
+    //for char && U char
+    if (dataTypeCode >= 11 && dataTypeCode <= 12)
+        cout << this->convertBinToDec() << " (" << static_cast<char>(atoi(this->convertBinToDec())) << ')' << endl;
+    else
+        cout << this->convertBinToDec() << endl;
 
-    cout << "Формат представления: " << endl;
+    cout << "Presentation format: " << endl;
 
     //sign
-    this->SetOutputColor(2, 0, enable_colors);
-    cout << "знак";
+    this->SetOutputColor(2, 0, colorsState);
+    cout << "sign";
 
     //exponent
-    if (data_type_code >= 8 && data_type_code <= 10)
+    if (dataTypeCode >= 8 && dataTypeCode <= 10)
     {
-        this->SetOutputColor(4, 0, enable_colors);
-        cout << " экспонента(порядок)";
+        this->SetOutputColor(4, 0, colorsState);
+        cout << " exponent";
     }
 
     //mantissa
-    this->SetOutputColor(6, 0, enable_colors);
-    cout << " матисса" << endl;
+    this->SetOutputColor(6, 0, colorsState);
+    cout << " mantissa" << endl;
     this->SetOutputColor();
 
 
     //sign
-    this->SetOutputColor(2,0,enable_colors);
-    cout << bin_result[0];
+    this->SetOutputColor(2,0,colorsState);
+    cout << pBinResult[0];
 
     //sign separation
-    if (data_type_code >= 0 && data_type_code <= 7 || data_type_code >= 8 && data_type_code <= 10 || data_type_code == 11)
+    if (dataTypeCode >= 0 && dataTypeCode <= 7 || dataTypeCode >= 8 && dataTypeCode <= 10 || dataTypeCode == 11)
         cout << ' ';
 
     //exponent
-    if (exponent_size != 0)
+    if (exponentSize != 0)
     {
-        this->SetOutputColor(4, 0, enable_colors);
-        for (int i = 1; i <= exponent_size; i++)
+        this->SetOutputColor(4, 0, colorsState);
+        for (int i = 1; i <= exponentSize; i++)
         {
-            cout << bin_result[i];
+            cout << pBinResult[i];
         }
         cout << ' ';
     }
 
     //mantissa
-    this->SetOutputColor(6, 0, enable_colors);
-    for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
+    this->SetOutputColor(6, 0, colorsState);
+    for (int i = exponentSize + 1; i < sizeofDataTypeValue_x8; i++)
     {
-        cout << bin_result[i];
+        cout << pBinResult[i];
     }
     cout << endl;
 
@@ -78,43 +103,42 @@ bool BinaryRepresentation::cout_binary_representation() {
     return 1;
 };
 
-char* BinaryRepresentation::convert_bin_to_dec() {
-    if (!bin_is_initialized)
+char* BinaryRepresentation::convertBinToDec() {
+    if (!binIsInitialized)
     {
         cout << endl << endl 
-            << "\t+=========================================================+" << endl
-            << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-            << "\t+=========================================================+" << endl << endl;
+            << "\t+=========================================================+\n"
+            << "\t|Attention! You didn't convert a decimal number to binary!|\n"
+            << "\t+=========================================================+\n" << endl;
         return nullptr;
     }
 
     //check for the list of supported variable data types
-    if (data_type_code > 12 || data_type_code == 10)
+    if (dataTypeCode > 12 || dataTypeCode == 10)
     {
-        cout << "Переменная не может быть преобразована в десятичное представление, поскольку ее нет в списке поддерживаемых" << endl;
         cout << "The variable cannot be converted to a decimal representation because it is not in the supported list" << endl;
         return nullptr;
     }
 
-    unsigned long long preliminary_integer_value = 0;
-    long double preliminary_fractional_value = 0;
+    unsigned long long preliminaryIntegerValue = 0;
+    long double preliminaryFractionalValue = 0;
 
-    bool is_null = true;
-    bool is_negative = false;
+    bool isNull = true;
+    bool isNegative = false;
 
-    unsigned short integer_length = 0;
-    unsigned short fractional_length = 0;
-    unsigned short total_length = 0;
+    unsigned short integerLength = 0;
+    unsigned short fractionalLength = 0;
+    unsigned short totalLength = 0;
 
-    //creating a copy of the bin_result array
-    char* bin_result_copy = new char[sizeof_data_type_value_x8 + 1]{ 0 };
-    this->char_array_copy(bin_result_copy, sizeof_data_type_value_x8, bin_result);
+    //creating a copy of the pBinResult array
+    char* pBinResult_copy = new char[sizeofDataTypeValue_x8 + 1]{ 0 };
+    this->copyCharArray(pBinResult_copy, sizeofDataTypeValue_x8, pBinResult);
 
     //checking for zero
-    for (int i = 0; i < sizeof_data_type_value_x8; i++)
+    for (int i = 0; i < sizeofDataTypeValue_x8; i++)
     {
-        if (bin_result_copy[i] == '1') {
-            is_null = false;
+        if (pBinResult_copy[i] == '1') {
+            isNull = false;
             break;
         }
     }
@@ -124,403 +148,326 @@ char* BinaryRepresentation::convert_bin_to_dec() {
     ///***********************************///
 
     //U integer types and U char types
-    if ((data_type_code >= 4 && data_type_code <= 7 || data_type_code == 12) && !is_null) {
-        for (int i = 0; i < sizeof_data_type_value_x8; i++)
-            if (bin_result_copy[(sizeof_data_type_value_x8 - 1) - i] == '1')
-            {
-#ifdef DEBUG
-                cout << "bin_result_copy[(sizeof_data_type_value_x8 - 1) - i[" << i << "] [=" << (sizeof_data_type_value_x8 - 1) - i << "]] = " << bin_result_copy[(sizeof_data_type_value_x8 - 1) - i] << "   " << (pow(2, i)) << endl;
-#endif // DEBUG
-                preliminary_integer_value += static_cast<unsigned long long>(pow(2, i));
-            }
-
-        //return 1;
+    if ((dataTypeCode >= 4 && dataTypeCode <= 7 || dataTypeCode == 12) && !isNull) {
+        for (int i = 0; i < sizeofDataTypeValue_x8; i++)
+            if (pBinResult_copy[(sizeofDataTypeValue_x8 - 1) - i] == '1')
+                preliminaryIntegerValue += static_cast<unsigned long long>(pow(2, i));
     }
-    //out: preliminary_integer_value (UNSIGNED) <- if not null. 
+    //out: preliminaryIntegerValue (UNSIGNED) <- if not null. 
 
 
     //S integer types and S char types
-    if ((data_type_code >= 0 && data_type_code <= 3 || data_type_code == 11) && !is_null) {
+    if ((dataTypeCode >= 0 && dataTypeCode <= 3 || dataTypeCode == 11) && !isNull) {
         // pre-processing for a negative value 
-        if (bin_result_copy[0] == '1')
+        if (pBinResult_copy[0] == '1')
         {
             short index_first_one_from_the_end;
 
-            is_negative = true;
+            isNegative = true;
 
             // search first '1' from the end
-            for (int i = sizeof_data_type_value_x8 - 1; i >= 0; i--)
+            for (int i = sizeofDataTypeValue_x8 - 1; i >= 0; i--)
             {
-                if (bin_result_copy[i] == '1') {
+                if (pBinResult_copy[i] == '1') {
                     index_first_one_from_the_end = i;
                     break;
                 }
             }
 
             // subtracting one
-            if (index_first_one_from_the_end == sizeof_data_type_value_x8 - 1)
-                bin_result_copy[index_first_one_from_the_end] = '0';
+            if (index_first_one_from_the_end == sizeofDataTypeValue_x8 - 1)
+                pBinResult_copy[index_first_one_from_the_end] = '0';
             else
             {
-                for (int i = index_first_one_from_the_end; i < sizeof_data_type_value_x8; i++)
-                    bin_result_copy[i] = '1';
-                bin_result_copy[index_first_one_from_the_end] = '0';
+                for (int i = index_first_one_from_the_end; i < sizeofDataTypeValue_x8; i++)
+                    pBinResult_copy[i] = '1';
+                pBinResult_copy[index_first_one_from_the_end] = '0';
             }
 
             // invert
-            for (int i = 0; i < sizeof_data_type_value_x8; i++)
+            for (int i = 0; i < sizeofDataTypeValue_x8; i++)
             {
-                if (bin_result_copy[i] == '1')
-                    bin_result_copy[i] = '0';
+                if (pBinResult_copy[i] == '1')
+                    pBinResult_copy[i] = '0';
                 else
-                    bin_result_copy[i] = '1';
+                    pBinResult_copy[i] = '1';
             }
         }
 
-        for (int i = 0; i < sizeof_data_type_value_x8; i++) {
-            if (bin_result_copy[(sizeof_data_type_value_x8 - 1) - i] == '1')
-            {
-#ifdef DEBUG
-                cout << "bin_result_copy[(sizeof_data_type_value_x8 - 1) - i[" << i << "] [=" << (sizeof_data_type_value_x8 - 1) - i << "]] = " << bin_result_copy[(sizeof_data_type_value_x8 - 1) - i] << "   " << (pow(2, i)) << endl;
-#endif // DEBUG
-                preliminary_integer_value += static_cast<unsigned long long>(pow(2, i));
-            }
+        for (int i = 0; i < sizeofDataTypeValue_x8; i++) {
+            if (pBinResult_copy[(sizeofDataTypeValue_x8 - 1) - i] == '1')
+                preliminaryIntegerValue += static_cast<unsigned long long>(pow(2, i));
         }
     }
-    //out: preliminary_integer_value (UNSIGNED) && is_negative <- if not null.
+    //out: preliminaryIntegerValue (UNSIGNED) && isNegative <- if not null.
 
 
     //floating point-based types
-    if ((data_type_code >= 8 && data_type_code <= 9) && !is_null)
+    if ((dataTypeCode >= 8 && dataTypeCode <= 9) && !isNull)
     {
-        short exponent_value = 0;
+        short exponentValue = 0;
 
-        if (bin_result_copy[0] == '1')
-            is_negative = true;
+        if (pBinResult_copy[0] == '1')
+            isNegative = true;
 
         // exponent
-        for (short i = 1; i <= exponent_size; i++)
+        for (short i = 1; i <= exponentSize; i++)
         {
-#ifdef DEBUG
-            cout << "bin_result_copy[(exponent_size + 1 - i[" << i << "] [=" << exponent_size - i + 1 << "]] = " << bin_result_copy[exponent_size - i + 1] << "   " << (pow(2, i - 1)) << endl;
-#endif // DEBUG
-            if (bin_result_copy[exponent_size - i + 1] == '1')
-                exponent_value += static_cast<short>(pow(2, i - 1));
+            if (pBinResult_copy[exponentSize - i + 1] == '1')
+                exponentValue += static_cast<short>(pow(2, i - 1));
         }
+
         // subtracting the offset
-        switch (data_type_code)
+        switch (dataTypeCode)
         {
         case 8:
-            exponent_value -= 127;
+            exponentValue -= 127;
             break;
+
         case 9:
-            exponent_value -= 1023;
+            exponentValue -= 1023;
             break;
+
         default:
             break;
         }
 
 
         //mantissa
-        if (exponent_value == 0)
+        if (exponentValue == 0)
         {
-            preliminary_integer_value = 1;
-            for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
+            preliminaryIntegerValue = 1;
+            for (int i = exponentSize + 1; i < sizeofDataTypeValue_x8; i++)
             {
-#ifdef DEBUG
-                cout << "preliminary_fractional_value i[" << i << "]  [" << (exponent_size + 1) - i - 1 << "] " << bool(bin_result_copy[i] == '1') << " = " << pow(2, (exponent_size + 1) - i - 1) << endl;
-#endif // DEBUG
-                if (bin_result_copy[i] == '1')
-                {
-                    preliminary_fractional_value += pow(2, (exponent_size + 1) - i - 1);
-                }
+                if (pBinResult_copy[i] == '1')
+                    preliminaryFractionalValue += pow(2, (exponentSize + 1) - i - 1);
             }
         }
 
-        if (exponent_value > 0)
+        if (exponentValue > 0)
         {
             //integer
-            for (int i = exponent_size + exponent_value; i > exponent_size; i--)
+            for (int i = exponentSize + exponentValue; i > exponentSize; i--)
             {
-#ifdef DEBUG
-                cout << "preliminary_integer_value i[" << i << "]  [" << exponent_size + exponent_value - i << "] " << bool(bin_result_copy[i] == '1') << " = " << unsigned long long(pow(2, exponent_size + exponent_value - i)) << endl;
-#endif // DEBUG
-                if (bin_result_copy[i] == '1')
-                    preliminary_integer_value += static_cast<unsigned long long>(pow(2, exponent_size + exponent_value - i));
+                if (pBinResult_copy[i] == '1')
+                    preliminaryIntegerValue += static_cast<unsigned long long>(pow(2, exponentSize + exponentValue - i));
 
-                if (i == exponent_size + 1) {
-#ifdef DEBUG
-                    cout << "pow(2, exponent_size + exponent_value - i + 1) = " << unsigned long long(pow(2, exponent_size + exponent_value - i + 1)) << endl;
-#endif // DEBUG
-                    preliminary_integer_value += static_cast<unsigned long long>(pow(2, exponent_size + exponent_value - i + 1)); //CAN BE OPTIMIZED
-                }
+                if (i == exponentSize + 1)
+                    preliminaryIntegerValue += static_cast<unsigned long long>(pow(2, exponentSize + exponentValue - i + 1)); //CAN BE OPTIMIZED
             }
 
             //after dot
-            for (int i = exponent_size + exponent_value + 1; i < sizeof_data_type_value_x8; i++)
+            for (int i = exponentSize + exponentValue + 1; i < sizeofDataTypeValue_x8; i++)
             {
-#ifdef DEBUG
-                cout << "preliminary_fractional_value i[" << i << "]  [" << (exponent_size + exponent_value + 1) - i - 1 << "] " << bool(bin_result_copy[i] == '1') << " = " << pow(2, (exponent_size + exponent_value + 1) - i - 1) << endl;
-#endif // DEBUG
-                if (bin_result_copy[i] == '1')
-                    preliminary_fractional_value += pow(2, (exponent_size + exponent_value + 1) - i - 1);
+                if (pBinResult_copy[i] == '1')
+                    preliminaryFractionalValue += pow(2, (exponentSize + exponentValue + 1) - i - 1);
             }
 
         }
 
-        if (exponent_value < 0)
+        if (exponentValue < 0)
         {
             //after dot
-            for (int i = exponent_size + 1; i < sizeof_data_type_value_x8; i++)
+            for (int i = exponentSize + 1; i < sizeofDataTypeValue_x8; i++)
             {
-#ifdef DEBUG
-                cout << "preliminary_fractional_value i[" << i << "]  [" << (exponent_size + 1) - i - 1 + exponent_value << "] " << bool(bin_result_copy[i] == '1') << " = " << pow(2, (exponent_size + 1) - i - 1 + exponent_value) << endl;
-#endif // DEBUG
-                if (bin_result_copy[i] == '1')
-                {
-                    preliminary_fractional_value += pow(2, (exponent_size + 1) - i - 1 + exponent_value);
-                }
+                if (pBinResult_copy[i] == '1')
+                    preliminaryFractionalValue += pow(2, (exponentSize + 1) - i - 1 + exponentValue);
             }
-            preliminary_fractional_value += pow(2, exponent_value);
-#ifdef DEBUG
-            cout << "pow(2, exponent_value) = " << pow(2, exponent_value) << endl;
-#endif // DEBUG
+            preliminaryFractionalValue += pow(2, exponentValue);
         }
     }
-    //out: preliminary_integer_value (UNSIGNED) && preliminary_fractional_value (POSITIVE) && is_negative <- if not null.
+    //out: preliminaryIntegerValue (UNSIGNED) && preliminaryFractionalValue (POSITIVE) && isNegative <- if not null.
 
 
     ///**********************************///
     ///            TO STRING             ///
     ///**********************************///
 
-    dec_result = new char[30]{ 0 };
-    char dec_result_int_buffer[30]{ 0 };
-    char dec_result_fra_buffer[30]{ 0 };
+    pDecResult = new char[30]{ 0 };
+    char decResult_intBuffer[30]{ 0 };
+    char decResult_fraBuffer[30]{ 0 };
 
     //INT
-    sprintf_s(dec_result_int_buffer, "%llu", preliminary_integer_value);
+    sprintf_s(decResult_intBuffer, "%llu", preliminaryIntegerValue);
 
     //FLOAT POINT-BASED
-    switch (data_type_code)
+    switch (dataTypeCode)
     {
     case 8:
-        sprintf_s(dec_result_fra_buffer, "%0.*f", static_cast<unsigned int>(9 - (preliminary_integer_value == 0 ? 0 : strlen(dec_result_int_buffer))), preliminary_fractional_value);
+        sprintf_s(decResult_fraBuffer, "%0.*f", static_cast<unsigned int>(9 - (preliminaryIntegerValue == 0 ? 0 : strlen(decResult_intBuffer))), preliminaryFractionalValue);
         break;
-    case 9:
-        sprintf_s(dec_result_fra_buffer, "%0.*f", static_cast<unsigned int>(17 - (preliminary_integer_value == 0 ? 0 : strlen(dec_result_int_buffer))), preliminary_fractional_value);
-        break;
-    default:
 
+    case 9:
+        sprintf_s(decResult_fraBuffer, "%0.*f", static_cast<unsigned int>(17 - (preliminaryIntegerValue == 0 ? 0 : strlen(decResult_intBuffer))), preliminaryFractionalValue);
+        break;
+
+    default:
         break;
     }
 
     // string factory
-    if (is_negative)
-        dec_result[0] = '-';
-    this->char_array_copy(dec_result, strlen(dec_result_int_buffer), dec_result_int_buffer, is_negative); //int
-    if (preliminary_fractional_value != 9)
-        this->char_array_copy(dec_result, strlen(dec_result_fra_buffer) + 1, dec_result_fra_buffer, strlen(dec_result_int_buffer) + is_negative, 1);
+    if (isNegative)
+        pDecResult[0] = '-';
+    this->copyCharArray(pDecResult, strlen(decResult_intBuffer), decResult_intBuffer, isNegative); //int
+    if (preliminaryFractionalValue != 9)
+        this->copyCharArray(pDecResult, strlen(decResult_fraBuffer) + 1, decResult_fraBuffer, strlen(decResult_intBuffer) + isNegative, 1);
 
-    ////string cleaner
-    //int dec_result_strlen = strlen(dec_result);
-    //for (int i = 0; i <= dec_result_strlen; i++)
-    //{
-    //    if (dec_result[dec_result_strlen - i] == '0')
-    //        dec_result[dec_result_strlen - i] = 0;
-    //    else
-    //        break;
-    //}
-
-#ifdef DEBUG_RESULT
-    /*cout << "dec_result_strlen = " << dec_result_strlen << endl;*/
-
-    cout << "dec_result_int_buffer = " << dec_result_int_buffer << ' ' << strlen(dec_result_int_buffer) << endl;
-    cout << "dec_result_fra_buffer = " << dec_result_fra_buffer << ' ' << strlen(dec_result_fra_buffer) << endl;
-    cout << "dec_result = " << dec_result << ' ' << strlen(dec_result) << endl;
-
-    cout << "is_null = " << is_null << endl;
-    cout << "is_negative = " << is_negative << endl;
-    cout << "preliminary_integer_value = " << preliminary_integer_value << endl;
-    cout << "preliminary_fractional_value = " << preliminary_fractional_value << endl << endl << endl;
-#endif // DEBUG_RESULT
-
-    dec_is_initialized = true;
-    delete[] bin_result_copy;
-    return dec_result;
+    decIsInitialized = true;
+    delete[] pBinResult_copy;
+    return pDecResult;
 };
 
 
 //getters
-char* BinaryRepresentation::get_dec_representation() {
-    if (!dec_is_initialized) {
+char* BinaryRepresentation::getDecRepresentation() {
+    if (!decIsInitialized) {
         cout << endl << endl 
-            << "\t+=========================================================+" << endl
-            << "\t|Attention! You didn't convert a binary number to decimal!|" << endl
-            << "\t+=========================================================+" << endl << endl;
+            << "\t+=========================================================+\n"
+            << "\t|Attention! You didn't convert a binary number to decimal!|\n"
+            << "\t+=========================================================+\n" << endl;
         return nullptr;
     }
-    return dec_result;
+    return pDecResult;
 }
 
-char* BinaryRepresentation::get_bin_representation() {
-    if (!bin_is_initialized) {
+char* BinaryRepresentation::getBinRepresentation() {
+    if (!binIsInitialized) {
         cout << endl << endl 
-            << "\t+=========================================================+" << endl
-            << "\t|Attention! You didn't convert a decimal number to binary!|" << endl
-            << "\t+=========================================================+" << endl << endl;
+            << "\t+=========================================================+\n"
+            << "\t|Attention! You didn't convert a decimal number to binary!|\n"
+            << "\t+=========================================================+\n" << endl;
         return nullptr;
     }
-    return bin_result;
+    return pBinResult;
 }
+
+bool BinaryRepresentation::getColorsState() {
+    return colorsState;
+};
 
 
 //setters
-void BinaryRepresentation::set_enable_colors(bool enable) {
-    enable_colors = enable;
+void BinaryRepresentation::setColorsState(bool state) {
+    colorsState = state;
 }
 
 
-
 //private
-void BinaryRepresentation::SetOutputColor(int text, int bg, bool is_enable_colors) {
-    if (is_enable_colors)
+void BinaryRepresentation::SetOutputColor(int text, int bg, bool isEnableColors) {
+    if (isEnableColors)
     {
         HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
         SetConsoleTextAttribute(hStdOut, (WORD)((bg << 4) | text));
     }
 }
 
-void BinaryRepresentation::initialize_the_data_type_code() {
+void BinaryRepresentation::initializeDataTypeCode() {
     //converting the variable type to a numeric code: find the sum of the codes of all characters of the data type, getting the preliminary data type code
-    unsigned short preliminary_data_type_code = 0;
-    for (int i = 0; i < strlen(data_type); i++)
-    {
-        preliminary_data_type_code += data_type[i];
-    }
+    unsigned short preliminaryDataTypeCode = 0;
+    for (int i = 0; i < strlen(pDataType); i++)
+        preliminaryDataTypeCode += static_cast<short>(pDataType[i]);
 
     // setting the final code of the data type
     // S = Signed; U = Unsigned; __int64 = long long
-    switch (preliminary_data_type_code)
+    switch (preliminaryDataTypeCode)
     {
         // SECTION 1: SIGNED INTEGER
     case 560: //S short
-        data_type_code = 0;
-        exponent_size = 0;
+        dataTypeCode = 0;
+        exponentSize = 0;
         break;
 
     case 331: //S int
-        data_type_code = 1;
-        exponent_size = 0;
+        dataTypeCode = 1;
+        exponentSize = 0;
         break;
 
     case 432: //S long
-        data_type_code = 2;
-        exponent_size = 0;
+        dataTypeCode = 2;
+        exponentSize = 0;
         break;
 
     case 627: //S __int64
-        data_type_code = 3;
-        exponent_size = 0;
+        dataTypeCode = 3;
+        exponentSize = 0;
         break;
 
         // SECTION 2: UNSIGNED INTEGER
     case 1453: //U short
-        data_type_code = 4;
-        exponent_size = 0;
+        dataTypeCode = 4;
+        exponentSize = 0;
         break;
 
     case 1224: //U int
-        data_type_code = 5;
-        exponent_size = 0;
+        dataTypeCode = 5;
+        exponentSize = 0;
         break;
 
     case 1325: //U long
-        data_type_code = 6;
-        exponent_size = 0;
+        dataTypeCode = 6;
+        exponentSize = 0;
         break;
 
     case 1520: //U __int64
-        data_type_code = 7;
-        exponent_size = 0;
+        dataTypeCode = 7;
+        exponentSize = 0;
         break;
 
         // SECTION 3: FLOATING POINT–BASED
     case 534: //float
-        data_type_code = 8;
-        exponent_size = 8;
+        dataTypeCode = 8;
+        exponentSize = 8;
         break;
 
     case 635: //double
-        data_type_code = 9;
-        exponent_size = 11;
+        dataTypeCode = 9;
+        exponentSize = 11;
         break;
 
     case 1099: //long double
-        data_type_code = 10;
-        exponent_size = 0; // WARNING
+        dataTypeCode = 10;
+        exponentSize = 0; // WARNING
         break;
 
         // SECTION 4: CHARACTER
     case 414: //S char
-        data_type_code = 11;
-        exponent_size = 0;
+        dataTypeCode = 11;
+        exponentSize = 0;
         break;
 
     case 1307: //U char
-        data_type_code = 12;
-        exponent_size = 0;
+        dataTypeCode = 12;
+        exponentSize = 0;
         break;
 
         // SECTION 5: ANOTHER
     default: //everything else, if not included in the supported list
-        data_type_code = 9999;
-        exponent_size = 0;
+        dataTypeCode = 9999;
+        exponentSize = 0;
         break;
     }
 }
 
-void BinaryRepresentation::char_array_copy(char* destination_str, size_t number_of_characters_to_copy, const char* source_str, size_t destination_pos_offset, size_t source_pos_offset, bool replace_spaces_with_underscores) {
-    for (size_t i = 0; i < number_of_characters_to_copy; i++)
-        destination_str[i + destination_pos_offset] = source_str[i + source_pos_offset];
+void BinaryRepresentation::copyCharArray(char* pDestinationCharStr, size_t numberOfCharactersToCopy, const char* pSourceCharStr, size_t destinationPosOffset, size_t sourcePosOffset, bool replaceSpacesWithUnderscores) {
+    for (size_t i = 0; i < numberOfCharactersToCopy; i++)
+        pDestinationCharStr[i + destinationPosOffset] = pSourceCharStr[i + sourcePosOffset];
     
-    destination_str[number_of_characters_to_copy + destination_pos_offset] = '\0';
+    pDestinationCharStr[numberOfCharactersToCopy + destinationPosOffset] = '\0';
     
     // Replacing spaces with underscores
-    if (replace_spaces_with_underscores)
-        for (size_t i = 0; i < number_of_characters_to_copy; i++)
-            if (destination_str[i] == ' ')
-                destination_str[i] = '_';
+    if (replaceSpacesWithUnderscores)
+        for (size_t i = 0; i < numberOfCharactersToCopy; i++)
+            if (pDestinationCharStr[i] == ' ')
+                pDestinationCharStr[i] = '_';
 }
 
-bool BinaryRepresentation::compare_arrays(const char* first_array, const char* second_array) {
-    if (strlen(first_array) != strlen(second_array))
+bool BinaryRepresentation::compareCharArrays(const char* pFirstCharArray, const char* pSecondCharArray) {
+    if (strlen(pFirstCharArray) != strlen(pSecondCharArray))
         return false;
 
-    for (size_t i = 0; i < strlen(first_array); i++)
-        if (first_array[i] != second_array[i])
+    for (size_t i = 0; i < strlen(pFirstCharArray); i++)
+        if (pFirstCharArray[i] != pSecondCharArray[i])
             return false;
 
     return true;
-}
-
-
-
-BinaryRepresentation::BinaryRepresentation() {
-    bin_result = nullptr;
-    dec_result = nullptr;
-    data_type = nullptr;
-
-    bin_is_initialized = false;
-    dec_is_initialized = false;
-	enable_colors = false;
-
-	data_type_code = 0;
-    sizeof_data_type_value_x8 = 0;
-    exponent_size = 0;
-}
-BinaryRepresentation::~BinaryRepresentation() {
-    delete[] bin_result;
-    delete[] dec_result;
-    delete[] data_type;
 }

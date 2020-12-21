@@ -27,75 +27,72 @@ public:
     // Special States, such as +-Infinity or NaN, are not processed. 
     // Values presented in denormalized form are also not processed.
     template <typename T>
-    char* convert_dec_to_bin(T all_standart_data_type_value) {
+    char* convertDecToBin(T allStandartDataTypeValue) {
         union ToolUnion {
-            long long tool;
-            T data_type_value;
+            long long bufferTool;
+            T dataTypeValue;
         };
         ToolUnion tools;
-        tools.data_type_value = all_standart_data_type_value;
+        tools.dataTypeValue = allStandartDataTypeValue;
 
         // initialization data type
-        data_type = new char[strlen(typeid(all_standart_data_type_value).name()) + 1];
-        this->char_array_copy(data_type, strlen(typeid(all_standart_data_type_value).name()), typeid(all_standart_data_type_value).name());
-        this->initialize_the_data_type_code();
-        if (data_type_code > 12 || data_type_code == 10)
+        pDataType = new char[strlen(typeid(allStandartDataTypeValue).name()) + 1];
+        this->copyCharArray(pDataType, strlen(typeid(allStandartDataTypeValue).name()), typeid(allStandartDataTypeValue).name());
+        this->initializeDataTypeCode();
+        if (dataTypeCode > 12 || dataTypeCode == 10)
         {
-            cout << "Переменная не может быть преобразована в двоичное представление, поскольку ее нет в списке поддерживаемых" << endl;
             cout << "The variable cannot be converted to a binary representation because it is not in the supported list" << endl;
             return nullptr;
         }
 
-        sizeof_data_type_value_x8 = 8 * sizeof(tools.data_type_value);
+        sizeofDataTypeValue_x8 = 8 * sizeof(tools.dataTypeValue);
 
-        bin_result = new char[sizeof_data_type_value_x8 + 1]{ 0 };
+        pBinResult = new char[sizeofDataTypeValue_x8 + 1]{ 0 };
 
         // performs a bitwise conjunction, then writes the result to an array
-        for (int i = sizeof_data_type_value_x8 - 1; i >= 0; i--)
+        for (int i = sizeofDataTypeValue_x8 - 1; i >= 0; i--)
         {
-            if ((tools.tool >> i) & 0b00000001) 
-                bin_result[sizeof_data_type_value_x8 - 1 - i] = '1';
+            if ((tools.bufferTool >> i) & 0b00000001) 
+                pBinResult[sizeofDataTypeValue_x8 - 1 - i] = '1';
             else
-                bin_result[sizeof_data_type_value_x8 - 1 - i] = '0';
+                pBinResult[sizeofDataTypeValue_x8 - 1 - i] = '0';
         }
 
-        bin_is_initialized = true;
+        binIsInitialized = true;
 
-        this->cout_binary_representation(); //WARNING
-        this->convert_bin_to_dec(); //WARNING
-
-        return bin_result;
+        return pBinResult;
 	};
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
-    char* convert_bin_to_dec();
+    char* convertBinToDec();
 
 
     // displays the amount of memory used by different types of variables
-    void cout_weight_data_types();
+    void coutWeightDataTypes();
 
     //returns 1 if output is successful; 0 if an error occurred or some variables were not initialized
-    bool cout_binary_representation();
+    bool coutBinRepresentation();
 
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
-    char* get_dec_representation();
+    char* getDecRepresentation();
 
     //returns a pointer to an array of characters if the operation was successful; nullptr if an error occurred or some variables were not initialized
-    char* get_bin_representation();
+    char* getBinRepresentation();
 
+    bool getColorsState();
 
-    void set_enable_colors(bool enable);
+    void setColorsState(bool state);
 
 private:
     // stores the binary representation of a number
-    char* bin_result;
-
-    // stores the data type of the variable, received as an argument, in an array of characters
-    char* data_type;
+    char* pBinResult;
     
     // stores the decimal representation of a number
-    char* dec_result;
+    char* pDecResult;
+
+    // stores the data type of the variable, received as an argument, in an array of characters
+    char* pDataType;
 
     // Signed integer: 0 = short; 1 = int; 2 = long; 3 = __int64
     // Unsigned integer: 4 = short; 5 = int; 6 = long; 7 = __int64
@@ -105,26 +102,26 @@ private:
     // - - - - - - - - - - - - - - - - INFO - - - - - - - - - - - - - - - -
     // 10 <- introduced for possible implementation in future updates
     // default: 0
-    unsigned short data_type_code;
+    unsigned short dataTypeCode;
 
-    int sizeof_data_type_value_x8; //default: 0
+    int sizeofDataTypeValue_x8; //default: 0
 
     // number of bits of memory occupied by the exponent
     // default: 0
-    unsigned short exponent_size;
+    unsigned short exponentSize;
     
     // settings
-    bool bin_is_initialized; //default: false
-    bool dec_is_initialized; //default: false
-    bool enable_colors;  //default: true
+    bool binIsInitialized; //default: false
+    bool decIsInitialized; //default: false
+    bool colorsState;  //default: true
 
 
-    void SetOutputColor(int text = 15, int bg = 0, bool is_enable_colors = true);
+    void SetOutputColor(int text = 15, int bg = 0, bool isEnableColors = true);
 
-    void initialize_the_data_type_code();
+    void initializeDataTypeCode();
 
     // don't forget to leave the last character of the array under the null-terminator, which means the end of the string
-    void char_array_copy(char* destination_str, size_t number_of_characters_to_copy, const char* source_str, size_t destination_pos_offset = 0, size_t source_pos_offset = 0, bool replace_spaces_with_underscores = false);
+    void copyCharArray(char* pDestinationCharStr, size_t numberOfCharactersToCopy, const char* pSourceCharStr, size_t destinationPosOffset = 0, size_t sourcePosOffset = 0, bool replaceSpacesWithUnderscores = false);
 
-    bool compare_arrays(const char* first_array, const char* second_array);
+    bool compareCharArrays(const char* pFirstCharArray, const char* pSecondCharArray);
 };
